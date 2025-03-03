@@ -8,8 +8,20 @@ spring:
     gateway:
       httpclient:
         connect-timeout: 5000
-        response-timeout: 30000
+        response-timeout: 70000
       routes:
+        - id: application-rate-limited
+          uri: ${routes.application.uri}
+          predicates:
+            - Path=/application/api/v1/ratelimited/**
+          filters:
+            - StripPrefix=1
+            - name: TokenBucketRateLimiter
+              args:
+                capacity: 3
+                refillAmount: 2
+                refillTimePeriod: 1
+                refillTimeUnit: MINUTES
         - id: application
           uri: ${routes.application.uri}
           predicates:
