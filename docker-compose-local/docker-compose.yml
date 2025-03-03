@@ -1,0 +1,7 @@
+name: system-design-playground
+
+services:
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6300:6379"
