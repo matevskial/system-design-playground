@@ -1,0 +1,17 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="ApiGatewayApplicationLocal" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <option name="ACTIVE_PROFILES" value="local" />
+    <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+    <module name="api-gateway" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="com.matevskial.systemdesignplayground.apigateway.ApiGatewayApplication" />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="com.matevskial.systemdesignplayground.apigateway.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <method v="2">
+      <option name="MakeProject" enabled="true" />
+    </method>
+  </configuration>
+</component>

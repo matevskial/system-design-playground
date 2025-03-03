@@ -1,0 +1,19 @@
+---
+spring:
+  application:
+    name: system-design-playground-api-gateway
+---
+spring:
+  cloud:
+    gateway:
+      httpclient:
+        connect-timeout: 5000
+        response-timeout: 30000
+      routes:
+        - id: application
+          uri: ${routes.application.uri}
+          predicates:
+            - Path=/application/**
+          filters:
+            - StripPrefix=1
+---

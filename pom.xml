@@ -39,6 +39,7 @@
 
     <modules>
         <module>application</module>
+        <module>api-gateway</module>
     </modules>
 
     <dependencies>

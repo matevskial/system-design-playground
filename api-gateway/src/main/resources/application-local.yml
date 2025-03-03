@@ -1,0 +1,11 @@
+---
+server:
+  port: 8080
+---
+spring:
+  data:
+    redis:
+      port: 6300
+---
+routes.application.uri: http://localhost:8081
+---
