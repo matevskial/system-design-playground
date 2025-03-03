@@ -11,6 +11,7 @@
 
     <artifactId>application</artifactId>
 
+    <groupId>com.matevskial.system-design-playground</groupId>
     <name>application</name>
     <description>the main module of this project</description>
 
