@@ -1,9 +1,6 @@
 package com.matevskial.systemdesignplayground.rest;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
 
@@ -14,8 +11,8 @@ import java.time.Duration;
 @RequestMapping("/api/v1/ratelimited")
 public class RateLimitedController {
 
-    @GetMapping
-    public String rateLimited(@RequestParam String delay) {
+    @GetMapping("/{configuration}")
+    public String rateLimited(@PathVariable String configuration, @RequestParam(required = false) String delay) {
         Duration duration;
         try {
             duration = Duration.parse(delay);
@@ -29,6 +26,6 @@ public class RateLimitedController {
             Thread.currentThread().interrupt();
         }
 
-        return "RateLimited";
+        return configuration;
     }
 }

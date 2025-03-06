@@ -33,7 +33,7 @@ public class TokenBucketRateLimiterGatewayFilterFactory extends AbstractGatewayF
     @Getter
     @Setter
     public static class Config {
-        private Kind kind = Kind.USING_LIBRARY;
+        private Kind kind;
         private int capacity;
         private int refillAmount;
         private int refillTimePeriod;

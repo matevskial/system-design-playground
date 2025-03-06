@@ -10,10 +10,10 @@ spring:
         connect-timeout: 5000
         response-timeout: 70000
       routes:
-        - id: application-rate-limited
+        - id: application-rate-limited-configuration1
           uri: ${routes.application.uri}
           predicates:
-            - Path=/application/api/v1/ratelimited/**
+            - Path=/application/api/v1/ratelimited/configuration1**
           filters:
             - StripPrefix=1
             - name: TokenBucketRateLimiter
@@ -22,6 +22,7 @@ spring:
                 refillAmount: 2
                 refillTimePeriod: 1
                 refillTimeUnit: MINUTES
+                kind: USING_LIBRARY
         - id: application
           uri: ${routes.application.uri}
           predicates:
