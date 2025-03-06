@@ -1,7 +1,8 @@
 package com.matevskial.systemdesignplayground.apigateway.filter.ratelimiter.tokenbucket;
 
-import com.matevskial.systemdesignplayground.ratelimiter.core.RateLimiter;
-import com.matevskial.systemdesignplayground.ratelimiter.tokenbucket.TokenBucketRateLimiter;
+import com.matevskial.systemdesignplayground.ratelimiter.RateLimiter;
+import com.matevskial.systemdesignplayground.ratelimiter.RateLimiters;
+import com.matevskial.systemdesignplayground.ratelimiter.TokenBucketParameters;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
@@ -15,7 +16,13 @@ class TokenBucketRateLimiterUsingCustomImplementation implements GatewayFilter {
     private final RateLimiter rateLimiter;
 
     public TokenBucketRateLimiterUsingCustomImplementation(TokenBucketRateLimiterParameters parameters) {
-        rateLimiter = new TokenBucketRateLimiter();
+        rateLimiter = RateLimiters.tokenBucket(TokenBucketParameters.builder()
+                .capacity(parameters.getCapacity())
+                .refillAmount(parameters.getRefillAmount())
+                .refillTimePeriod(parameters.getRefillTimePeriod())
+                .refillTimeUnit(parameters.getRefillTimeUnit())
+                .build()
+        );
     }
 
     @Override
