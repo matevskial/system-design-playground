@@ -9,3 +9,9 @@ spring:
 ---
 routes.application.uri: http://localhost:6061
 ---
+logging:
+  level:
+    com:
+      matevskial:
+        systemdesignplayground: DEBUG
+---

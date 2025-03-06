@@ -25,7 +25,8 @@ public class TokenBucketRateLimiterGatewayFilterFactory extends AbstractGatewayF
                 .refillTimeUnit(config.getRefillTimeUnit())
                 .build();
         return switch (config.getKind()) {
-            case USING_LIBRARY, CUSTOM -> new TokenBucketRateLimiterUsingLibrary(parameters);
+            case USING_LIBRARY -> new TokenBucketRateLimiterUsingLibrary(parameters);
+            case CUSTOM -> new TokenBucketRateLimiterUsingCustomImplementation(parameters);
         };
     }
 

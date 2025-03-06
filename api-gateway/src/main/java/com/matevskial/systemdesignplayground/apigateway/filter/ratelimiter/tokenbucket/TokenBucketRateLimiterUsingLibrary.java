@@ -1,5 +1,6 @@
 package com.matevskial.systemdesignplayground.apigateway.filter.ratelimiter.tokenbucket;
 
+import lombok.extern.slf4j.Slf4j;
 import org.isomorphism.util.TokenBucket;
 import org.isomorphism.util.TokenBuckets;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
@@ -8,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+@Slf4j
 class TokenBucketRateLimiterUsingLibrary implements GatewayFilter {
 
     private final TokenBucket tokenBucket;
@@ -21,6 +23,7 @@ class TokenBucketRateLimiterUsingLibrary implements GatewayFilter {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+        log.debug("[{}] Filter executing", this.getClass().getSimpleName());
         boolean consumed = tokenBucket.tryConsume();
         if (consumed) {
             return chain.filter(exchange);
