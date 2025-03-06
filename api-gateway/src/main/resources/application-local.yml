@@ -1,11 +1,11 @@
 ---
 server:
-  port: 8080
+  port: 6060
 ---
 spring:
   data:
     redis:
       port: 6300
 ---
-routes.application.uri: http://localhost:8081
+routes.application.uri: http://localhost:6061
 ---
