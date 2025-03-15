@@ -15,4 +15,8 @@ public class RateLimiters {
         );
         return new TokenBucketRateLimiter(tokenBucket);
     }
+
+    public static RateLimiter leakingBucket(LeakingBucketParameters leakingBucketParameters) {
+        return new LeakingBucketRateLimiter(leakingBucketParameters);
+    }
 }

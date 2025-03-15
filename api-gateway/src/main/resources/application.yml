@@ -36,6 +36,16 @@ spring:
                 refillTimePeriod: 1
                 refillTimeUnit: MINUTES
                 kind: CUSTOM
+        - id: application-rate-limited-leakingbucket1
+          uri: ${routes.application.uri}
+          predicates:
+            - Path=/application/api/v1/ratelimited/leakingbucket1**
+          filters:
+            - StripPrefix=1
+            - name: LeakingBucketRateLimiter
+              args:
+                capacity: 10
+                outflowRateInSeconds: 5
         - id: application
           uri: ${routes.application.uri}
           predicates:
