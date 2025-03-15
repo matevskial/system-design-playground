@@ -1,2 +1,19 @@
 server:
   port: 6061
+---
+# example config for tomcat embedded server
+#server:
+#  tomcat:
+#    keep-alive-timeout: PT5s
+#    max-keep-alive-requests: 1
+#  servlet:
+#    session:
+#      timeout: PT10s
+
+#spring:
+#  datasource:
+#    tomcat:
+#      max-idle: 1
+#      min-idle: 1
+#      max-wait: 10000
+---
