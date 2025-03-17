@@ -44,8 +44,8 @@ spring:
             - StripPrefix=1
             - name: LeakingBucketRateLimiter
               args:
-                capacity: 10
-                outflowRateInSeconds: 5
+                capacity: 2
+                outflowRateInSeconds: 1
         - id: application
           uri: ${routes.application.uri}
           predicates:

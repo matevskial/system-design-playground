@@ -26,12 +26,19 @@ class LeakingBucketRateLimiterUsingCustomImplementation implements GatewayFilter
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         log.debug("[{}] Filter executing", this.getClass().getSimpleName());
-        boolean limited = rateLimiter.limit();
-        if (limited) {
+
+        Mono<Void> rateLimited = rateLimiter.submitReactive(chain.filter(exchange));
+
+        return rateLimited.onErrorResume(IllegalStateException.class, e -> {
             exchange.getResponse().setStatusCode(HttpStatus.TOO_MANY_REQUESTS);
             return exchange.getResponse().setComplete();
-        }
+        });
 
-        return chain.filter(exchange);
+//        if (limited) {
+//            exchange.getResponse().setStatusCode(HttpStatus.TOO_MANY_REQUESTS);
+//            return exchange.getResponse().setComplete();
+//        }
+
+//        return chain.filter(exchange);
     }
 }

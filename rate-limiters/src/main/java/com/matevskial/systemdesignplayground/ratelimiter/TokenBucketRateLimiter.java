@@ -1,6 +1,7 @@
 package com.matevskial.systemdesignplayground.ratelimiter;
 
 import lombok.RequiredArgsConstructor;
+import reactor.core.publisher.Mono;
 
 @RequiredArgsConstructor
 class TokenBucketRateLimiter implements RateLimiter {
@@ -12,4 +13,10 @@ class TokenBucketRateLimiter implements RateLimiter {
         boolean consumed = tokenBucket.tryConsume();
         return !consumed;
     }
+
+    @Override
+    public Mono<Void> submitReactive(Mono<Void> m) {
+        return Mono.empty();
+    }
+
 }

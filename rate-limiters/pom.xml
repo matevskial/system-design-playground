@@ -15,4 +15,10 @@
     <name>rate-limiters</name>
     <description>the rate-limiters module contains implementations of varius rate-limit algorithms</description>
 
+    <dependencies>
+        <dependency>
+            <groupId>io.projectreactor</groupId>
+            <artifactId>reactor-core</artifactId>
+        </dependency>
+    </dependencies>
 </project>
