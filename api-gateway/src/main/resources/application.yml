@@ -44,8 +44,22 @@ spring:
             - StripPrefix=1
             - name: LeakingBucketRateLimiter
               args:
-                capacity: 2
+                capacity: 1
                 outflowRateInSeconds: 1
+                type: QUEUE
+        - id: application-rate-limited-leakingbucket2
+          uri: ${routes.application.uri}
+          predicates:
+            - Path=/application/api/v1/ratelimited/leakingbucket2**
+          filters:
+            - StripPrefix=1
+            - name: LeakingBucketRateLimiter
+              args:
+                capacity: 1
+                outflowRateInSeconds: 1
+                type: NONQUEUE
+        # order is important, order matters, you matter(just kidding, the order matters here):
+        # the route with id application should be placed below all other routes where prediate Path starts with /application
         - id: application
           uri: ${routes.application.uri}
           predicates:

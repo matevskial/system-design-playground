@@ -8,4 +8,5 @@ import lombok.Value;
 public class LeakingBucketParameters {
     int capacity;
     int outflowRateInSeconds;
+    LeakingBucketType type;
 }

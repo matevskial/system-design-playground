@@ -5,19 +5,18 @@ import reactor.core.publisher.MonoSink;
 
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
 
-class LeakingBucketRateLimiter implements RateLimiter {
+class LeakingBucketWithQueueRateLimiter implements RateLimiter {
 
     private final Queue<MonoSink<?>> queue;
     private final int capacity;
     private final Thread queueConsumerThread;
-    private final TokenBucket tokenBucket;
+    private final LeakingBucket leakingBucket;
 
-    public LeakingBucketRateLimiter(LeakingBucketParameters parameters) {
+    public LeakingBucketWithQueueRateLimiter(LeakingBucketParameters parameters) {
         capacity = parameters.getCapacity();
         queue = new LinkedBlockingQueue<>(capacity);
-        tokenBucket = new TokenBucket(parameters.getOutflowRateInSeconds(), parameters.getOutflowRateInSeconds(), 1, TimeUnit.SECONDS);
+        leakingBucket = new LeakingBucket(parameters.getCapacity(), parameters.getOutflowRateInSeconds());
         queueConsumerThread = new Thread(this::consumeQueue);
         queueConsumerThread.start();
     }
@@ -41,9 +40,9 @@ class LeakingBucketRateLimiter implements RateLimiter {
 
     private void consumeQueue() {
         while(true) {
-            boolean consumed = tokenBucket.tryConsume();
-            while (!consumed) {
-                consumed = tokenBucket.tryConsume();
+            boolean processed = leakingBucket.leakAndProcess();
+            while (!processed) {
+                processed = leakingBucket.leakAndProcess();
             }
 
             MonoSink<?> sink = queue.poll();

@@ -17,6 +17,10 @@ public class RateLimiters {
     }
 
     public static RateLimiter leakingBucket(LeakingBucketParameters leakingBucketParameters) {
-        return new LeakingBucketRateLimiter(leakingBucketParameters);
+        if (leakingBucketParameters.getType() == LeakingBucketType.QUEUE) {
+            return new LeakingBucketWithQueueRateLimiter(leakingBucketParameters);
+        }
+        LeakingBucket leakingBucket = new LeakingBucket(leakingBucketParameters.getCapacity(), leakingBucketParameters.getOutflowRateInSeconds());
+        return new LeakingBucketNoQueueRateLimiter(leakingBucket);
     }
 }

@@ -11,14 +11,15 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 @Slf4j
-class LeakingBucketRateLimiterUsingCustomImplementation implements GatewayFilter {
+class LeakingBucketRateLimiterUsingQueueImplementation implements GatewayFilter {
 
     private final RateLimiter rateLimiter;
 
-    public LeakingBucketRateLimiterUsingCustomImplementation(LeakingBucketRateLimiterParameters parameters) {
+    public LeakingBucketRateLimiterUsingQueueImplementation(LeakingBucketRateLimiterParameters parameters) {
         rateLimiter = RateLimiters.leakingBucket(LeakingBucketParameters.builder()
                 .capacity(parameters.getCapacity())
                 .outflowRateInSeconds(parameters.getOutflowRateInSeconds())
+                .type(parameters.getType())
                 .build()
         );
     }

@@ -1,5 +1,6 @@
 package com.matevskial.systemdesignplayground.apigateway.filter.ratelimiter.leakingbucket;
 
+import com.matevskial.systemdesignplayground.ratelimiter.LeakingBucketType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,8 +20,14 @@ public class LeakingBucketRateLimiterGatewayFilterFactory extends AbstractGatewa
         LeakingBucketRateLimiterParameters parameters = LeakingBucketRateLimiterParameters.builder()
                 .capacity(config.getCapacity())
                 .outflowRateInSeconds(config.getOutflowRateInSeconds())
+                .type(config.getType())
                 .build();
-        return new LeakingBucketRateLimiterUsingCustomImplementation(parameters);
+
+        if (parameters.getType() == LeakingBucketType.QUEUE) {
+            return new LeakingBucketRateLimiterUsingQueueImplementation(parameters);
+        }
+
+        return new LeakingBucketRateLimiterUsingNonQueueImplementation(parameters);
     }
 
     @NoArgsConstructor
@@ -29,5 +36,6 @@ public class LeakingBucketRateLimiterGatewayFilterFactory extends AbstractGatewa
     public static class Config {
         private int capacity;
         private int outflowRateInSeconds;
+        private LeakingBucketType type;
     }
 }
