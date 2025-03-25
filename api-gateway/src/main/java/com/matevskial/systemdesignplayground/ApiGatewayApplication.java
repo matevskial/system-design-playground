@@ -1,4 +1,4 @@
-package com.matevskial.systemdesignplayground.apigateway;
+package com.matevskial.systemdesignplayground;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

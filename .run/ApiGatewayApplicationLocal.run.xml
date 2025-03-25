@@ -3,7 +3,7 @@
     <option name="ACTIVE_PROFILES" value="local" />
     <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
     <module name="api-gateway" />
-    <option name="SPRING_BOOT_MAIN_CLASS" value="com.matevskial.systemdesignplayground.apigateway.ApiGatewayApplication" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="com.matevskial.systemdesignplayground.ApiGatewayApplication" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="com.matevskial.systemdesignplayground.apigateway.*" />
