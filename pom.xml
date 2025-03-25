@@ -41,6 +41,7 @@
         <module>application</module>
         <module>api-gateway</module>
         <module>rate-limiters</module>
+        <module>my-rest-controllers</module>
     </modules>
 
     <dependencies>
@@ -62,6 +63,11 @@
             <dependency>
                 <groupId>com.matevskial.system-design-playground</groupId>
                 <artifactId>rate-limiters</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.matevskial.system-design-playground</groupId>
+                <artifactId>my-rest-controllers</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
