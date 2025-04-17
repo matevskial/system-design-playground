@@ -8,6 +8,7 @@ spring:
       port: 6300
 ---
 routes.application.uri: http://localhost:6061
+routes.application-reactive.uri: http://localhost:6062
 ---
 logging:
   level:
