@@ -43,6 +43,7 @@
         <module>api-gateway</module>
         <module>rate-limiters</module>
         <module>my-rest-controllers</module>
+        <module>url-shortener</module>
     </modules>
 
     <dependencies>
