@@ -39,6 +39,7 @@
 
     <modules>
         <module>application</module>
+        <module>application-reactive</module>
         <module>api-gateway</module>
         <module>rate-limiters</module>
         <module>my-rest-controllers</module>
