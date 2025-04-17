@@ -1,5 +1,7 @@
 package com.matevskial.systemdesignplayground.rest;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
@@ -12,20 +14,32 @@ import java.time.Duration;
 public class RateLimitedController {
 
     @GetMapping("/{configuration}")
-    public String rateLimited(@PathVariable String configuration, @RequestParam(required = false) String delay) {
-        Duration duration;
+    public ResponseEntity<String> rateLimited(@PathVariable String configuration, @RequestParam(required = false) String delay, @RequestParam(required = false) String status) {
+        Duration duration = null;
         try {
             duration = Duration.parse(delay);
         } catch (Exception e) {
-            duration = Duration.ofSeconds(1);
+            // do nothing
         }
 
+        if (duration != null) {
+            try {
+                Thread.sleep(duration);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+
+        HttpStatus httpStatus;
         try {
-            Thread.sleep(duration);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
+            httpStatus = HttpStatus.resolve(Integer.parseInt(status));
+            if (httpStatus == null) {
+                httpStatus = HttpStatus.OK;
+            }
+        } catch (Exception e) {
+            httpStatus = HttpStatus.OK;
         }
 
-        return configuration;
+        return ResponseEntity.status(httpStatus).body(configuration);
     }
 }
