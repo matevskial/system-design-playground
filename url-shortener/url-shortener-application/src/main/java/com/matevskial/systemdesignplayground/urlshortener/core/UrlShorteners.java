@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class UrlShorteners {
 
-    public static UrlShortener base62Variant() {
-        return new Base62UrlShortener();
+    public static UrlShortener base62Variant(IdGenerator idGenerator) {
+        return new Base62UrlShortener(idGenerator);
     }
 }
