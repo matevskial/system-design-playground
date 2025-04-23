@@ -1,0 +1,44 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.matevskial.system-design-playground</groupId>
+        <artifactId>url-shortener</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>url-shortener-application-common</artifactId>
+
+    <name>url-shortener-application-common</name>
+    <description>Module that houses common classes and utilities used in both url-shortener's application and application-reactive</description>
+
+    <dependencies>
+
+        <!--        spring and spring-related dependencies -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot</artifactId>
+        </dependency>
+
+        <!--        dependencies from this repo's modules-->
+        <dependency>
+            <groupId>com.matevskial.system-design-playground</groupId>
+            <artifactId>url-shortener-core</artifactId>
+        </dependency>
+
+        <!--        everything else-->
+        <dependency>
+            <groupId>io.hypersistence</groupId>
+            <artifactId>hypersistence-tsid</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.persistence</groupId>
+            <artifactId>jakarta.persistence-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+        </dependency>
+    </dependencies>
+
+</project>

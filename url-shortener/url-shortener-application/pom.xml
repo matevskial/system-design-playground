@@ -45,6 +45,10 @@
             <groupId>com.matevskial.system-design-playground</groupId>
             <artifactId>url-shortener-core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.matevskial.system-design-playground</groupId>
+            <artifactId>url-shortener-application-common</artifactId>
+        </dependency>
 
 <!--        everything else-->
         <dependency>
