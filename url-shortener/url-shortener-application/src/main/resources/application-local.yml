@@ -1,2 +1,12 @@
 server:
   port: 6063
+---
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: 'jdbc:postgresql://localhost:6301/url_shortener'
+    username: root
+    password: 12345678
+  jpa:
+    show-sql: true
+---

@@ -1,0 +1,29 @@
+databaseChangeLog:
+  - changeSet:
+      id: 'initial_schema'
+      author: 'aleksandar matevski'
+      preConditions:
+        - onFail: MARK_RAN
+          not:
+            tableExists:
+              tableName: 'URLS'
+      changes:
+        - createTable:
+            tableName: 'URLS'
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: original_url
+                  type: nvarchar(2083)
+                  constraints:
+                    unique: true
+              - column:
+                  name: shortened
+                  type: varchar(10)
+                  constraints:
+                    unique: true
