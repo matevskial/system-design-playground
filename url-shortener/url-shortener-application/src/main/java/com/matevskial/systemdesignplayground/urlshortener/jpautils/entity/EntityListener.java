@@ -2,18 +2,14 @@ package com.matevskial.systemdesignplayground.urlshortener.jpautils.entity;
 
 import io.hypersistence.tsid.TSID;
 import jakarta.persistence.PrePersist;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
-@Configurable
+@Component
+@RequiredArgsConstructor
 public class EntityListener {
 
-    private TSID.Factory tsidFactory;
-
-    @Autowired
-    public void setTsidFactory(TSID.Factory tsidFactory) {
-        this.tsidFactory = tsidFactory;
-    }
+    private final TSID.Factory tsidFactory;
 
     @PrePersist
     public void setId(Object object) {
