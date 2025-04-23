@@ -18,13 +18,15 @@ public class UrlShortenerService {
 
     public String getOrCreateShortenedUrl(String originalUrl) {
         var shortenedOptional = urlPersistence.findShortened(originalUrl);
+        String shortened;
         if (shortenedOptional.isPresent()) {
-            return shortenedOptional.get();
+            shortened = shortenedOptional.get();
+        } else {
+            shortened = urlShortener.shorten(originalUrl);
+            urlPersistence.saveShortened(originalUrl, shortened);
         }
 
-        String shortened = urlShortener.shorten(originalUrl);
-        urlPersistence.saveShortened(originalUrl, shortened);
-        return String.format("%s/%s", urlShortenerProperties.getBaseUrl().toString(), shortened);
+        return String.format("%s/%s", urlShortenerProperties.getBaseUrl(), shortened);
     }
 
     public Optional<String> getOriginalUrl(String shortened) {
