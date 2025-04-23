@@ -1,33 +1,26 @@
-package com.matevskial.systemdesignplayground.urlshortener.controller;
+package com.matevskial.systemdesignplayground.urlshortener.web.controller;
 
 import com.matevskial.systemdesignplayground.urlshortener.service.UrlShortenerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
 import java.util.Optional;
 
 @RestController
+@RequestMapping("/{shortened}")
 @RequiredArgsConstructor
-@RequestMapping("/api/v1")
-class V1UrlShortenerController {
+class ShortenedToOriginalUrlRedirectionController {
 
     private final UrlShortenerService urlShortenerService;
 
-    @PostMapping("/shorten")
-    public ResponseEntity<String> shorten(@RequestParam String originalUrl) {
-        try {
-            String shortenedUrl = urlShortenerService.getOrCreateShortenedUrl(originalUrl);
-            return ResponseEntity.created(URI.create(shortenedUrl)).body(shortenedUrl);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Unexpected error while shortening URL");
-        }
-    }
-
-    @GetMapping("/{shortened}")
-    public ResponseEntity<String> redirectToOriginalUrl(@PathVariable String shortened) {
+    @GetMapping
+    public ResponseEntity<Object> redirectToOriginalUrl(@PathVariable String shortened) {
         try {
             Optional<String> originalUrl = urlShortenerService.getOriginalUrl(shortened);
             if (originalUrl.isPresent()) {
