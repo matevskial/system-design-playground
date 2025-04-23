@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-class BeansConfig {
+class UrlShortenerConfig {
 
     @Bean
     public UrlShortener urlShortener(TSID.Factory tsIdFactory) {
