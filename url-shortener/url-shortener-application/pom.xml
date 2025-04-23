@@ -40,6 +40,12 @@
             <optional>true</optional>
         </dependency>
 
+<!--        dependencies from this repo's modules-->
+        <dependency>
+            <groupId>com.matevskial.system-design-playground</groupId>
+            <artifactId>url-shortener-core</artifactId>
+        </dependency>
+
 <!--        everything else-->
         <dependency>
             <groupId>io.hypersistence</groupId>

@@ -10,9 +10,6 @@
     </parent>
 
     <packaging>pom</packaging>
-    <modules>
-        <module>url-shortener-application</module>
-    </modules>
 
     <groupId>com.matevskial.system-design-playground</groupId>
     <artifactId>url-shortener</artifactId>
@@ -20,4 +17,18 @@
     <name>url-shortener</name>
     <description>Module containing submodules for url-shortener core implementation, application and reactive application</description>
 
+    <modules>
+        <module>url-shortener-application</module>
+        <module>url-shortener-core</module>
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.matevskial.system-design-playground</groupId>
+                <artifactId>url-shortener-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 </project>
