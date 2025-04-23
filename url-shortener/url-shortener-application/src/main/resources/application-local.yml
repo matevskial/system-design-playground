@@ -10,3 +10,5 @@ spring:
   jpa:
     show-sql: true
 ---
+url-shortener:
+  base-url: http://localhost:6063
