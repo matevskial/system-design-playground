@@ -1,13 +1,8 @@
 package com.matevskial.systemdesignplayground.urlshortener.persistence.jpa;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.matevskial.systemdesignplayground.urlshortener.jpautils.entity.EntityListener;
+import jakarta.persistence.*;
+import lombok.*;
 import org.springframework.data.annotation.PersistenceCreator;
 
 import java.util.Objects;
@@ -17,7 +12,8 @@ import java.util.Objects;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class UrlEntity {
+@EntityListeners({EntityListener.class})
+public class UrlEntity implements com.matevskial.systemdesignplayground.urlshortener.jpautils.entity.Entity<Long> {
 
     @PersistenceCreator
     public static UrlEntity of(Long id, String url, String shortened) {
@@ -25,6 +21,7 @@ public class UrlEntity {
     }
 
     @Id
+    @Setter
     private Long id;
 
     @Column(name = "original_url", unique = true)
@@ -32,6 +29,10 @@ public class UrlEntity {
 
     @Column(name = "shortened", unique = true)
     private String shortened;
+
+    public static UrlEntity newEntity(String url, String shortened) {
+        return new UrlEntity(null, url, shortened);
+    }
 
     @Override
     public boolean equals(Object o) {

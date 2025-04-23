@@ -13,6 +13,8 @@
 * [] - Consider implementing a way of updating of rate-limiting rules dynamically
 * [] - Consider implementing a way of updating routing rules dynamically in `api-gateway`
 * [] - (api-gateway, application) - See if the field trace can be removed conditionally(debug vs prod build)
+* [] - (url-shortener) Implement configuration to set node in a dynamic way in order to prepare the service to be running with multiple instances. 
+One example is calculating a node id based on the ip address of the pod where the application is running
 
 ## done
 

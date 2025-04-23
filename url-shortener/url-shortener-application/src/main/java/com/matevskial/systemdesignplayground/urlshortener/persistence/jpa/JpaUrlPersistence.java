@@ -18,7 +18,7 @@ public interface JpaUrlPersistence extends UrlPersistence, JpaRepository<UrlEnti
 
     @Override
     default void saveShortened(String url, String shortened) {
-        UrlEntity urlEntity = UrlEntity.of(1L, url, shortened);
+        UrlEntity urlEntity = UrlEntity.newEntity(url, shortened);
         save(urlEntity);
     }
 
