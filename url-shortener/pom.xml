@@ -19,6 +19,7 @@
 
     <modules>
         <module>url-shortener-application</module>
+        <module>url-shortener-application-reactive</module>
         <module>url-shortener-core</module>
         <module>url-shortener-application-common</module>
     </modules>
@@ -33,7 +34,7 @@
             <dependency>
                 <groupId>com.matevskial.system-design-playground</groupId>
                 <artifactId>url-shortener-application-common</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
+                <version>${project.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
