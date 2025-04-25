@@ -1,6 +1,8 @@
 package com.matevskial.systemdesignplayground.urlshortener.service;
 
 import com.matevskial.systemdesignplayground.urlshortener.config.UrlShortenerProperties;
+import com.matevskial.systemdesignplayground.urlshortener.core.UrlShortener;
+import com.matevskial.systemdesignplayground.urlshortener.persistence.UrlPersistence;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
@@ -11,26 +13,22 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UrlShortenerService {
 
-//    private final UrlPersistence urlPersistence;
-//    private final UrlShortener urlShortener;
+    private final UrlPersistence urlPersistence;
+    private final UrlShortener urlShortener;
     private final UrlShortenerProperties urlShortenerProperties;
 
     public Mono<String> getOrCreateShortenedUrl(String originalUrl) {
-//        var shortenedOptional = urlPersistence.findShortened(originalUrl);
-//        String shortened;
-//        if (shortenedOptional.isPresent()) {
-//            shortened = shortenedOptional.get();
-//        } else {
-//            shortened = urlShortener.shorten(originalUrl);
-//            urlPersistence.saveShortened(originalUrl, shortened);
-//        }
-//
-//        return String.format("%s/%s", urlShortenerProperties.getBaseUrl(), shortened);
-        return Mono.just(String.format("%s/%s", urlShortenerProperties.getBaseUrl(), "abcd"));
+        return urlPersistence.findShortened(originalUrl).switchIfEmpty(Mono.defer(() -> {
+            String shortened = urlShortener.shorten(originalUrl);
+            return urlPersistence.saveShortened(originalUrl, shortened).thenReturn(shortened);
+        })).map(shortened -> {
+            return String.format("%s/%s", urlShortenerProperties.getBaseUrl(), shortened);
+        });
     }
 
     public Mono<Optional<String>> getOriginalUrl(String shortened) {
-        return Mono.just(Optional.of("https://x.com"));
-//        return urlPersistence.findOriginalUrl(shortened);
+        return urlPersistence.findOriginalUrl(shortened)
+                .map(originalUrl -> Optional.of(originalUrl))
+                .switchIfEmpty(Mono.fromSupplier(() -> Optional.empty()));
     }
 }
