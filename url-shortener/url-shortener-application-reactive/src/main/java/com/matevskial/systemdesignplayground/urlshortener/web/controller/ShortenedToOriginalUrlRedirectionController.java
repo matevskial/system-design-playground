@@ -21,12 +21,11 @@ class ShortenedToOriginalUrlRedirectionController {
 
     @GetMapping
     public Mono<ResponseEntity<Object>> redirectToOriginalUrl(@PathVariable String shortened) {
-        return urlShortenerService.getOriginalUrl(shortened).map(originalUrlOptional -> {
-            if (originalUrlOptional.isPresent()) {
-                return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(originalUrlOptional.get())).build();
-            }
+        return urlShortenerService.getOriginalUrl(shortened).map(originalUrl -> {
+            return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(originalUrl)).build();
+        }).switchIfEmpty(Mono.fromSupplier(() -> {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }).onErrorResume(exception -> {
+        })).onErrorResume(exception -> {
             return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Unexpected error while redirecting to original URL"));
         });
     }

@@ -26,9 +26,7 @@ public class UrlShortenerService {
         });
     }
 
-    public Mono<Optional<String>> getOriginalUrl(String shortened) {
-        return urlPersistence.findOriginalUrl(shortened)
-                .map(originalUrl -> Optional.of(originalUrl))
-                .switchIfEmpty(Mono.fromSupplier(() -> Optional.empty()));
+    public Mono<String> getOriginalUrl(String shortened) {
+        return urlPersistence.findOriginalUrl(shortened);
     }
 }
