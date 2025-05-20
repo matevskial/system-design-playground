@@ -4,6 +4,7 @@
     <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
     <module name="url-shortener-application" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="com.matevskial.systemdesignplayground.urlshortener.UrlShortenerApplication" />
+    <option name="VM_PARAMETERS" value="-Xmx512m" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="com.matevskial.systemdesignplayground.urlshortener.*" />
