@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.matevskial</groupId>
+        <artifactId>system-design-playground</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+
+    <groupId>com.matevskial.system-design-playground</groupId>
+    <artifactId>netty-playground</artifactId>
+
+    <name>netty-playground</name>
+    <description>this module contains code that uses netty features, learning and experimenting with netty</description>
+
+    <dependencies>
+<!--        This dependency is used to import all the netty dependencies with one shot instead of manually listing them here :D
+            The version is determined from the parent of this module(the parent of this module uses spring parent currently)-->
+        <dependency>
+            <groupId>io.projectreactor.netty</groupId>
+            <artifactId>reactor-netty-core</artifactId>
+        </dependency>
+    </dependencies>
+</project>
