@@ -14,6 +14,21 @@ public class EchoController {
 
     @PostMapping
     public InputStreamResource echo(ServletRequest request) throws IOException {
+        try {
+            Thread.sleep(10000);
+            System.out.println("async job");
+        } catch (Exception e) {
+            System.out.println("interrupted");
+        }
+
+//        CompletableFuture.runAsync(() -> {
+//            try {
+//                Thread.sleep(10000);
+//                System.out.println("async job");
+//            } catch (Exception e) {
+//                System.out.println("interrupted");
+//            }
+//        });
         return new InputStreamResource(request.getInputStream());
     }
 }
