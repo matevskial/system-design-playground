@@ -20,6 +20,7 @@
     <modules>
         <module>url-shortener-application</module>
         <module>url-shortener-application-reactive</module>
+        <module>url-shortener-netty-application</module>
         <module>url-shortener-core</module>
         <module>url-shortener-application-common</module>
     </modules>

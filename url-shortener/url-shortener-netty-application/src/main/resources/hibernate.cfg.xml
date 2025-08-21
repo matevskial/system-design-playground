@@ -1,0 +1,22 @@
+<hibernate-configuration>
+    <session-factory>
+        <!-- Database connection settings -->
+        <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
+        <property name="hibernate.connection.url">jdbc:postgresql://localhost:6301/url_shortener</property>
+        <property name="hibernate.connection.username">root</property>
+        <property name="hibernate.connection.password">12345678</property>
+
+        <!-- JDBC connection pool settings -->
+<!--        not intented for production use according to hibernate-->
+<!--        <property name="hibernate.connection.pool_size">5</property>-->
+
+        <!-- SQL dialect -->
+        <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
+
+        <!-- Enable SQL in console -->
+        <property name="hibernate.show_sql">true</property>
+
+        <!-- List annotated entity classes -->
+        <mapping class="com.matevskial.systemdesignplayground.urlshortener.persistence.hibernate.UrlEntity"/>
+    </session-factory>
+</hibernate-configuration>
