@@ -1,5 +1,6 @@
 package com.matevskial.systemdesignplayground.urlshortener.service;
 
+import com.matevskial.systemdesignplayground.urlshortener.framework.application.transaction.Transaction;
 import com.matevskial.systemdesignplayground.urlshortener.core.UrlShortener;
 import com.matevskial.systemdesignplayground.urlshortener.core.UrlShortenerProperties;
 import com.matevskial.systemdesignplayground.urlshortener.persistence.UrlPersistence;
@@ -15,16 +16,18 @@ public class UrlShortenerService {
     private final UrlShortenerProperties urlShortenerProperties;
 
     public String getOrCreateShortenedUrl(String originalUrl) {
-        var shortenedOptional = urlPersistence.findShortened(originalUrl);
-        String shortened;
-        if (shortenedOptional.isPresent()) {
-            shortened = shortenedOptional.get();
-        } else {
-            shortened = urlShortener.shorten(originalUrl);
-            urlPersistence.saveShortened(originalUrl, shortened);
-        }
+        return Transaction.withTransaction(() -> {
+            var shortenedOptional = urlPersistence.findShortened(originalUrl);
+            String shortened;
+            if (shortenedOptional.isPresent()) {
+                shortened = shortenedOptional.get();
+            } else {
+                shortened = urlShortener.shorten(originalUrl);
+                urlPersistence.saveShortened(originalUrl, shortened);
+            }
 
-        return String.format("%s/%s", urlShortenerProperties.baseUrl(), shortened);
+            return String.format("%s/%s", urlShortenerProperties.baseUrl(), shortened);
+        });
     }
 
     public Optional<String> getOriginalUrl(String shortened) {

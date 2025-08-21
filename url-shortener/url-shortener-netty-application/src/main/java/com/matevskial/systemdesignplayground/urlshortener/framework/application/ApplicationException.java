@@ -1,4 +1,4 @@
-package com.matevskial.systemdesignplayground.urlshortener.application;
+package com.matevskial.systemdesignplayground.urlshortener.framework.application;
 
 public class ApplicationException extends RuntimeException {
 
