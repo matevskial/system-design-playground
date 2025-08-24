@@ -3,13 +3,18 @@ package com.matevskial.systemdesignplayground.urlshortener;
 import com.matevskial.systemdesignplayground.urlshortener.framework.application.ApplicationContext;
 import com.matevskial.systemdesignplayground.urlshortener.framework.application.ApplicationException;
 import com.matevskial.systemdesignplayground.urlshortener.framework.application.transaction.TransactionApplicationContextManager;
+import com.matevskial.systemdesignplayground.urlshortener.framework.web.RequestHandlers;
+import com.matevskial.systemdesignplayground.urlshortener.framework.web.netty.HttpNettyHandler;
+import com.matevskial.systemdesignplayground.urlshortener.service.UrlShortenerService;
 import com.matevskial.systemdesignplayground.urlshortener.spring.jdbc.SpringJdbcApplicationContextManager;
 import com.matevskial.systemdesignplayground.urlshortener.tsid.TsIdApplicationContextManager;
+import com.matevskial.systemdesignplayground.urlshortener.web.UrlShortenerHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpRequestDecoder;
 import io.netty.handler.codec.http.HttpResponseEncoder;
 import io.netty.util.concurrent.Future;
@@ -37,6 +42,11 @@ public class UrlShortenerNettyApplication {
             UrlShortenerApplicationContextManager urlShortenerApplicationContextManager = new UrlShortenerApplicationContextManager();
             urlShortenerApplicationContextManager.manage(applicationContext);
 
+            RequestHandlers requestHandlers = new RequestHandlers();
+            HttpNettyHandler httpNettyHandler = new HttpNettyHandler(requestHandlers);
+            UrlShortenerHandler urlShortenerHandler = new UrlShortenerHandler(applicationContext.getBean(UrlShortenerService.class));
+            urlShortenerHandler.setupHandlers(requestHandlers);
+
             System.out.println("Starting url-shortener netty application...");
 
             httpServerParentEventLoopGroup = new NioEventLoopGroup(1);
@@ -50,7 +60,9 @@ public class UrlShortenerNettyApplication {
                         protected void initChannel(Channel ch) {
                             ch.pipeline()
                                     .addLast("netty http decoder(inbound)", new HttpRequestDecoder())
-                                    .addLast("netty http encoder(outbound)", new HttpResponseEncoder());
+                                    .addLast("netty http encoder(outbound)", new HttpResponseEncoder())
+                                    .addLast("netty http object aggregator(inbound)", new HttpObjectAggregator(1048576))
+                                    .addLast("netty http framework(inbound)", httpNettyHandler);
                         }
                     });
             var channelFuture = httpServerBootstrap.bind(8080).syncUninterruptibly();
