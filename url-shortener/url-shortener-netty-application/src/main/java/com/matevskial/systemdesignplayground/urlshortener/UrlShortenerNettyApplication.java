@@ -2,7 +2,7 @@ package com.matevskial.systemdesignplayground.urlshortener;
 
 import com.matevskial.systemdesignplayground.urlshortener.framework.application.ApplicationContext;
 import com.matevskial.systemdesignplayground.urlshortener.framework.application.ApplicationException;
-import com.matevskial.systemdesignplayground.urlshortener.framework.application.transaction.TransactionApplicationContextManager;
+import com.matevskial.systemdesignplayground.urlshortener.spring.TransactionWithSpringApplicationContextManager;
 import com.matevskial.systemdesignplayground.urlshortener.framework.web.RequestHandlers;
 import com.matevskial.systemdesignplayground.urlshortener.framework.web.netty.HttpNettyHandler;
 import com.matevskial.systemdesignplayground.urlshortener.service.UrlShortenerService;
@@ -37,7 +37,7 @@ public class UrlShortenerNettyApplication {
             SpringJdbcApplicationContextManager springJdbcApplicationContextManager = new SpringJdbcApplicationContextManager();
             springJdbcApplicationContextManager.manage(applicationContext);
 
-            TransactionApplicationContextManager transactionManager = new TransactionApplicationContextManager();
+            TransactionWithSpringApplicationContextManager transactionManager = new TransactionWithSpringApplicationContextManager();
             transactionManager.manage(applicationContext);
 
             UrlShortenerApplicationContextManager urlShortenerApplicationContextManager = new UrlShortenerApplicationContextManager();

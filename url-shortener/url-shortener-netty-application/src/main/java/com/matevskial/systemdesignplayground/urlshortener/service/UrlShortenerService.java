@@ -1,6 +1,6 @@
 package com.matevskial.systemdesignplayground.urlshortener.service;
 
-import com.matevskial.systemdesignplayground.urlshortener.framework.application.transaction.Transaction;
+import com.matevskial.systemdesignplayground.urlshortener.framework.transaction.Transaction;
 import com.matevskial.systemdesignplayground.urlshortener.core.UrlShortener;
 import com.matevskial.systemdesignplayground.urlshortener.core.UrlShortenerProperties;
 import com.matevskial.systemdesignplayground.urlshortener.persistence.UrlPersistence;

@@ -1,6 +1,6 @@
 package com.matevskial.systemdesignplayground.urlshortener.spring;
 
-import com.matevskial.systemdesignplayground.urlshortener.framework.application.transaction.TransactionContext;
+import com.matevskial.systemdesignplayground.urlshortener.framework.transaction.TransactionContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;

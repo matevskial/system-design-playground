@@ -1,4 +1,4 @@
-package com.matevskial.systemdesignplayground.urlshortener.framework.application.transaction;
+package com.matevskial.systemdesignplayground.urlshortener.framework.transaction;
 
 import java.util.concurrent.Callable;
 
