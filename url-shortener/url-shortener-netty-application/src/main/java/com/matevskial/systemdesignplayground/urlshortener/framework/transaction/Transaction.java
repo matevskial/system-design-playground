@@ -16,10 +16,15 @@ public class Transaction {
      * application
      */
     public static void initialize(TransactionContext transactionContext) {
-        Transaction.transactionContext = transactionContext;
+        if (Transaction.transactionContext == null) {
+            Transaction.transactionContext = transactionContext;
+        }
     }
 
     public static <R> R withTransaction(Callable<R> callable) {
+        if (Transaction.transactionContext == null) {
+            throw new IllegalStateException("TransactionContext has not been initialized");
+        }
         try {
             return transactionContext.doIn(callable);
         } catch (Exception e) {
