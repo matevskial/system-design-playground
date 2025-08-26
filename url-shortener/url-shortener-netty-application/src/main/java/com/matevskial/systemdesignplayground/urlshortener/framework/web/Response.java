@@ -15,7 +15,7 @@ public abstract class Response {
 
     public void setStatus(int status) {
         this.status = status;
-        if (status == 201 && locationHeaderValue == null) {
+        if ((status == 201 || status == 302) && locationHeaderValue == null) {
             throw new IllegalStateException("location header value is required");
         }
     }

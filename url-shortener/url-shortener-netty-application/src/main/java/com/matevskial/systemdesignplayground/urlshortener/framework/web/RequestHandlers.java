@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public class RequestHandlers {
 
-    private final List<RequestHandlerRegisterEnd> requestHandlers = new ArrayList<>();
+    private final List<RegisteredRequestHandler> requestHandlers = new ArrayList<>();
 
     public RequestHandlersRegisterBegin register() {
         return new RequestHandlersRegisterBegin(this);
@@ -25,7 +25,13 @@ public class RequestHandlers {
         private String path;
 
         public RequestHandlersRegister path(String path) {
+            if (path == null) {
+                throw new IllegalArgumentException("path cannot be null");
+            }
             this.path = path;
+            if (!path.startsWith("/")) {
+                this.path = "/" + this.path;
+            }
             return new RequestHandlersRegister(this);
         }
     }
@@ -47,18 +53,12 @@ public class RequestHandlers {
         }
 
         public void register() {
-            requestHandlersRegisterBegin.requestHandlers.requestHandlers.add(new RequestHandlerRegisterEnd(this));
+            requestHandlersRegisterBegin.requestHandlers.requestHandlers.add(new RegisteredRequestHandler(
+                    requestHandlersRegisterBegin.path,
+                    httpMethod,
+                    requestHandlerFunction
+            ));
         }
-    }
-
-    @RequiredArgsConstructor
-    public static final class RequestHandlerRegisterEnd {
-        private final RequestHandlersRegister requestHandlersRegister;
-    }
-
-    @FunctionalInterface
-    public interface RequestHandlerFunction {
-        void apply(Request request, Response response);
     }
 
     @RequiredArgsConstructor
@@ -84,20 +84,36 @@ public class RequestHandlers {
         private final RequestHandlersQueryBegin requestHandlersQueryBegin;
         private HttpMethod httpMethod;
 
-        public Optional<RequestHandlerFunction> method(HttpMethod httpMethod) {
+        public Optional<RegisteredRequestHandler> method(HttpMethod httpMethod) {
             this.httpMethod = httpMethod;
             return query();
         }
 
-        public Optional<RequestHandlerFunction> query() {
-            for (RequestHandlerRegisterEnd registeredHandler : requestHandlersQueryBegin.requestHandlers.requestHandlers) {
-                if (Objects.equals(registeredHandler.requestHandlersRegister.requestHandlersRegisterBegin.path, requestHandlersQueryBegin.path)) {
-                    if (Objects.equals(registeredHandler.requestHandlersRegister.httpMethod, httpMethod)) {
-                        return Optional.ofNullable(registeredHandler.requestHandlersRegister.requestHandlerFunction);
+        public Optional<RegisteredRequestHandler> query() {
+            for (RegisteredRequestHandler registeredHandler : requestHandlersQueryBegin.requestHandlers.requestHandlers) {
+                if (pathMatches(registeredHandler)) {
+                    if (Objects.equals(registeredHandler.httpMethod(), httpMethod)) {
+                        return Optional.of(registeredHandler);
                     }
                 }
             }
             return Optional.empty();
+        }
+
+        private boolean pathMatches(RegisteredRequestHandler registeredHandler) {
+            String[] pathSegments = this.requestHandlersQueryBegin.path.split("/");
+            String[] registeredPathSegments = registeredHandler.path().split("/");
+            if (pathSegments.length != registeredPathSegments.length) {
+                return false;
+            }
+            for (int i = 0; i < pathSegments.length; i++) {
+                if (!(registeredPathSegments[i].startsWith("{") && registeredPathSegments[i].endsWith("}"))) {
+                    if (!pathSegments[i].equals(registeredPathSegments[i])) {
+                        return false;
+                    }
+                }
+            }
+            return true;
         }
     }
 }

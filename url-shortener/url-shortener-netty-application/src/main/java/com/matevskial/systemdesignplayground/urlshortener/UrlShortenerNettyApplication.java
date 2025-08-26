@@ -8,6 +8,7 @@ import com.matevskial.systemdesignplayground.urlshortener.framework.web.netty.Ht
 import com.matevskial.systemdesignplayground.urlshortener.service.UrlShortenerService;
 import com.matevskial.systemdesignplayground.urlshortener.spring.jdbc.SpringJdbcApplicationContextManager;
 import com.matevskial.systemdesignplayground.urlshortener.tsid.TsIdApplicationContextManager;
+import com.matevskial.systemdesignplayground.urlshortener.web.ShortenedToOriginalUrlRedirectionHandler;
 import com.matevskial.systemdesignplayground.urlshortener.web.UrlShortenerHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
@@ -44,8 +45,12 @@ public class UrlShortenerNettyApplication {
 
             RequestHandlers requestHandlers = new RequestHandlers();
             HttpNettyHandler httpNettyHandler = new HttpNettyHandler(requestHandlers);
+
             UrlShortenerHandler urlShortenerHandler = new UrlShortenerHandler(applicationContext.getBean(UrlShortenerService.class));
             urlShortenerHandler.setupHandlers(requestHandlers);
+
+            ShortenedToOriginalUrlRedirectionHandler shortenedToOriginalUrlRedirectionHandler = new ShortenedToOriginalUrlRedirectionHandler(applicationContext.getBean(UrlShortenerService.class));
+            shortenedToOriginalUrlRedirectionHandler.setupHandlers(requestHandlers);
 
             System.out.println("Starting url-shortener netty application...");
 

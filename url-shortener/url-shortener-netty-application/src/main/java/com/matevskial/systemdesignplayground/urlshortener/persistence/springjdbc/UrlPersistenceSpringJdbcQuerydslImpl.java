@@ -47,6 +47,18 @@ public class UrlPersistenceSpringJdbcQuerydslImpl implements UrlPersistence {
 
     @Override
     public Optional<String> findOriginalUrl(String shortened) {
-        return Optional.empty();
+        try {
+            SQLTemplates dialect = new PostgreSQLTemplates();
+            SQLQuery<?> query = new SQLQuery<Void>(jdbcTemplate.getDataSource().getConnection(), dialect);
+            QUrlJdbcEntity urlEntity = QUrlJdbcEntity.urlJdbcEntity;
+            return Optional.ofNullable(
+                    query.select(urlEntity.originalUrl)
+                            .from(urlEntity)
+                            .where(urlEntity.shortened.eq(shortened))
+                            .fetchFirst()
+            );
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -22,7 +22,7 @@ class NettyResponse extends Response {
     }
 
     public void setHeaders(FullHttpResponse nettyResponse) {
-        if (status == 201) {
+        if (status == 201 || status == 302) {
             nettyResponse.headers().set(HttpHeaderNames.LOCATION, locationHeaderValue);
         }
     }
