@@ -20,7 +20,7 @@ public class UrlShortenerApplicationContextManager implements ApplicationContext
         UrlShortener urlShortener = UrlShorteners.base62Variant(new TsIdGenerator(context.getBean(TSID.Factory.class)));
         context.registerBean(urlShortener, UrlShortener.class);
 
-        UrlShortenerProperties urlShortenerProperties = new UrlShortenerProperties("http://localhost:8080");
+        UrlShortenerProperties urlShortenerProperties = new UrlShortenerProperties(context.getConfigProperty("url-shortener.base-url", String.class));
         context.registerBean(urlShortenerProperties, UrlShortenerProperties.class);
 
         context.registerBean(new UrlPersistenceSpringJdbcQuerydslImpl(

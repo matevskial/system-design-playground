@@ -16,9 +16,9 @@ public class SpringJdbcApplicationContextManager implements ApplicationContextMa
     @Override
     public void manage(ApplicationContext context) {
         PGSimpleDataSource dataSource = new PGSimpleDataSource();
-        dataSource.setUrl("jdbc:postgresql://localhost:6301/url_shortener");
-        dataSource.setUser("root");
-        dataSource.setPassword("12345678");
+        dataSource.setUrl(context.getConfigProperty("application.datasource.url", String.class));
+        dataSource.setUser(context.getConfigProperty("application.datasource.username", String.class));
+        dataSource.setPassword(context.getConfigProperty("application.datasource.password", String.class));
         dataSource.setConnectTimeout(200);
         try(Connection c = dataSource.getConnection()) {
             // ignore

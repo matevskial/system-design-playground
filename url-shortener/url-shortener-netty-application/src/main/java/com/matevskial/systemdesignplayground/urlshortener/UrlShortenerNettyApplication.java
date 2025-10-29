@@ -2,6 +2,8 @@ package com.matevskial.systemdesignplayground.urlshortener;
 
 import com.matevskial.systemdesignplayground.urlshortener.framework.application.ApplicationContext;
 import com.matevskial.systemdesignplayground.urlshortener.framework.application.ApplicationException;
+import com.matevskial.systemdesignplayground.urlshortener.framework.application.config.ApplicationConfig;
+import com.matevskial.systemdesignplayground.urlshortener.framework.application.config.ApplicationConfigBuilder;
 import com.matevskial.systemdesignplayground.urlshortener.spring.TransactionWithSpringApplicationContextManager;
 import com.matevskial.systemdesignplayground.urlshortener.framework.web.RequestHandlers;
 import com.matevskial.systemdesignplayground.urlshortener.framework.web.netty.HttpNettyHandler;
@@ -23,10 +25,15 @@ import io.netty.util.concurrent.Future;
 public class UrlShortenerNettyApplication {
 
     public static void main(String[] args) {
+        ApplicationConfig applicationConfig = new ApplicationConfigBuilder()
+                .fromProperties()
+                .fromYaml()
+                .build();
+
+        ApplicationContext applicationContext = new ApplicationContext(applicationConfig);
+
         NioEventLoopGroup httpServerParentEventLoopGroup = null;
         NioEventLoopGroup httpServerChildEventLoopGroup = null;
-
-        ApplicationContext applicationContext = ApplicationContext.INSTANCE;
 
         try {
             System.out.println("Initializing url-shortener netty application...");
@@ -70,7 +77,7 @@ public class UrlShortenerNettyApplication {
                                     .addLast("netty http framework(inbound)", httpNettyHandler);
                         }
                     });
-            var channelFuture = httpServerBootstrap.bind(8080).syncUninterruptibly();
+            var channelFuture = httpServerBootstrap.bind(applicationContext.getConfigProperty("server.port", Integer.class, 8080)).syncUninterruptibly();
             channelFuture.channel().closeFuture().syncUninterruptibly();
         } catch (ApplicationException e) {
             System.out.println("Failed initializing application: %s".formatted(e.getMessage()));

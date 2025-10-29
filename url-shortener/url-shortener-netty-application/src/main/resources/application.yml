@@ -6,9 +6,7 @@ application:
     driver-class-name: org.postgresql.Driver
     url: 'jdbc:postgresql://localhost:6301/url_shortener'
     username: root
-    password: 12345678
-  jpa:
-    show-sql: true
+    password: '12345678'
 ---
 url-shortener:
   base-url: http://localhost:6063
