@@ -1,7 +1,8 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="UrlShortenerNettyApplication" type="Application" factoryName="Application" nameIsGenerated="true">
+  <configuration default="false" name="UrlShortenerNettyApplicationLocal" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="com.matevskial.systemdesignplayground.urlshortener.UrlShortenerNettyApplication" />
     <module name="url-shortener-netty-application" />
+    <option name="PROGRAM_PARAMETERS" value="application.profiles=local" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="com.matevskial.systemdesignplayground.urlshortener.*" />

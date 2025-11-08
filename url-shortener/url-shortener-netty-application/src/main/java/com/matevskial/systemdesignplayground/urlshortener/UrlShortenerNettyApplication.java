@@ -3,7 +3,8 @@ package com.matevskial.systemdesignplayground.urlshortener;
 import com.matevskial.systemdesignplayground.urlshortener.framework.application.ApplicationContext;
 import com.matevskial.systemdesignplayground.urlshortener.framework.application.ApplicationException;
 import com.matevskial.systemdesignplayground.urlshortener.framework.application.config.ApplicationConfig;
-import com.matevskial.systemdesignplayground.urlshortener.framework.application.config.ApplicationConfigBuilder;
+import com.matevskial.systemdesignplayground.urlshortener.framework.application.config.ApplicationConfigReader;
+import com.matevskial.systemdesignplayground.urlshortener.framework.application.config.ApplicationConfigKeys;
 import com.matevskial.systemdesignplayground.urlshortener.spring.TransactionWithSpringApplicationContextManager;
 import com.matevskial.systemdesignplayground.urlshortener.framework.web.RequestHandlers;
 import com.matevskial.systemdesignplayground.urlshortener.framework.web.netty.HttpNettyHandler;
@@ -22,13 +23,29 @@ import io.netty.handler.codec.http.HttpRequestDecoder;
 import io.netty.handler.codec.http.HttpResponseEncoder;
 import io.netty.util.concurrent.Future;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class UrlShortenerNettyApplication {
 
     public static void main(String[] args) {
-        ApplicationConfig applicationConfig = new ApplicationConfigBuilder()
+        List<String> profiles = List.of();
+        if (args != null) {
+            for (String arg : args) {
+                if (arg != null && arg.startsWith(ApplicationConfigKeys.PROFILES)) {
+                    String[] argParts = arg.split("=");
+                    if (argParts.length > 1) {
+                        profiles = Arrays.asList(argParts[1].trim().split(","));
+                    }
+                }
+            }
+        }
+
+        ApplicationConfig applicationConfig = new ApplicationConfigReader()
+                .profiles(profiles)
                 .fromProperties()
                 .fromYaml()
-                .build();
+                .read();
 
         ApplicationContext applicationContext = new ApplicationContext(applicationConfig);
 
@@ -37,6 +54,11 @@ public class UrlShortenerNettyApplication {
 
         try {
             System.out.println("Initializing url-shortener netty application...");
+            if (applicationConfig.getProfiles().isEmpty()) {
+                System.out.println("No profile activated. Using default profile.");
+            } else {
+                System.out.println("Profiles activated: %s".formatted(applicationConfig.getProfiles()));
+            }
 
             TsIdApplicationContextManager tsIdApplicationContextManager = new TsIdApplicationContextManager();
             tsIdApplicationContextManager.manage(applicationContext);
@@ -59,7 +81,8 @@ public class UrlShortenerNettyApplication {
             ShortenedToOriginalUrlRedirectionHandler shortenedToOriginalUrlRedirectionHandler = new ShortenedToOriginalUrlRedirectionHandler(applicationContext.getBean(UrlShortenerService.class));
             shortenedToOriginalUrlRedirectionHandler.setupHandlers(requestHandlers);
 
-            System.out.println("Starting url-shortener netty application...");
+            int httpPort = applicationContext.getConfigProperty("server.port", Integer.class, 8080);
+            System.out.println("Starting url-shortener netty application on port %s...".formatted(httpPort));
 
             httpServerParentEventLoopGroup = new NioEventLoopGroup(1);
             httpServerChildEventLoopGroup = new NioEventLoopGroup();
@@ -77,7 +100,7 @@ public class UrlShortenerNettyApplication {
                                     .addLast("netty http framework(inbound)", httpNettyHandler);
                         }
                     });
-            var channelFuture = httpServerBootstrap.bind(applicationContext.getConfigProperty("server.port", Integer.class, 8080)).syncUninterruptibly();
+            var channelFuture = httpServerBootstrap.bind(httpPort).syncUninterruptibly();
             channelFuture.channel().closeFuture().syncUninterruptibly();
         } catch (ApplicationException e) {
             System.out.println("Failed initializing application: %s".formatted(e.getMessage()));
