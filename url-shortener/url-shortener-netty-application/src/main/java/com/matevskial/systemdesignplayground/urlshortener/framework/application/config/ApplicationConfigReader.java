@@ -38,10 +38,16 @@ public class ApplicationConfigReader {
                 this.profiles.add(profile.toString());
             });
         }
-        this.applicationConfig.setProfiles(profiles);
+        List<String> finalProfiles = new ArrayList<>(this.profiles.size());
+        Set<String> seenProfiles = new HashSet<>();
         for (String profile : this.profiles) {
-            readConfig("application-%s".formatted(profile));
+            if (!seenProfiles.contains(profile)) {
+                seenProfiles.add(profile);
+                finalProfiles.add(profile);
+                readConfig("application-%s".formatted(profile));
+            }
         }
+        this.applicationConfig.setProfiles(finalProfiles);
         return this.applicationConfig;
     }
 
