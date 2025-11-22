@@ -29,10 +29,14 @@ public class HttpNettyHandler extends ChannelInboundHandlerAdapter {
                     .method(mapFromNettyHttpMethod(request.method()));
             if (requestHandlerOptional.isPresent()) {
                 executorService.submit(() -> {
-                    Request frameworkRequest = mapFromNettyRequest(request, requestHandlerOptional.get());
-                    Response response = new NettyResponse();
-                    requestHandlerOptional.get().requestHandlerFunction().apply(frameworkRequest, response);
-                    promise.setSuccess(response);
+                    try {
+                        Request frameworkRequest = mapFromNettyRequest(request, requestHandlerOptional.get());
+                        Response response = new NettyResponse();
+                        requestHandlerOptional.get().requestHandlerFunction().apply(frameworkRequest, response);
+                        promise.setSuccess(response);
+                    } catch (Exception e) {
+                        promise.setFailure(e);
+                    }
                 });
                 promise.addListener(future -> {
                     if (future.isSuccess()) {
@@ -88,6 +92,7 @@ public class HttpNettyHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        System.out.println("Exception during request handling: " + cause.getMessage());
         writeAndFlushInternalServerErrorResponse(ctx, cause).addListener(ChannelFutureListener.CLOSE);
     }
 
