@@ -82,7 +82,7 @@ public class UrlShortenerNettyApplication {
             shortenedToOriginalUrlRedirectionHandler.setupHandlers(requestHandlers);
 
             int httpPort = applicationContext.getConfigProperty("server.port", Integer.class, 8080);
-            System.out.println("Starting url-shortener netty application on port %s...".formatted(httpPort));
+            System.out.println("Starting url-shortener netty application...");
 
             httpServerParentEventLoopGroup = new NioEventLoopGroup(1);
             httpServerChildEventLoopGroup = new NioEventLoopGroup();
@@ -101,6 +101,7 @@ public class UrlShortenerNettyApplication {
                         }
                     });
             var channelFuture = httpServerBootstrap.bind(httpPort).syncUninterruptibly();
+            System.out.println("Started url-shortener netty application on port %s".formatted(httpPort));
             channelFuture.channel().closeFuture().syncUninterruptibly();
         } catch (ApplicationException e) {
             System.out.println("Failed initializing application: %s".formatted(e.getMessage()));

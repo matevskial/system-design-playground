@@ -11,7 +11,8 @@ public class PathVariables {
     public PathVariables(String path, String registeredRequestHandlerPath) {
        String[] pathSegments = path.split("/");
        String[] registeredRequestHandlerPathSegments = registeredRequestHandlerPath.split("/");
-       for (int i = 0; i < pathSegments.length; i++) {
+       int smallerLen = Math.min(pathSegments.length, registeredRequestHandlerPathSegments.length);
+       for (int i = 0; i < smallerLen; i++) {
            if (registeredRequestHandlerPathSegments[i].startsWith("{") && registeredRequestHandlerPathSegments[i].endsWith("}")) {
                if (pathVariables == null) {
                    pathVariables = new HashMap<>();

@@ -4,10 +4,10 @@ import com.matevskial.systemdesignplayground.urlshortener.persistence.UrlPersist
 import com.querydsl.sql.PostgreSQLTemplates;
 import com.querydsl.sql.SQLQuery;
 import com.querydsl.sql.SQLTemplates;
+import com.querydsl.sql.dml.SQLInsertClause;
 import io.hypersistence.tsid.TSID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.simple.JdbcClient;
 
 import java.util.Optional;
 
@@ -15,7 +15,6 @@ import java.util.Optional;
 public class UrlPersistenceSpringJdbcQuerydslImpl implements UrlPersistence {
 
     private final JdbcTemplate jdbcTemplate;
-    private final JdbcClient jdbcClient;
     private final TSID.Factory tsidFactory;
 
     @Override
@@ -37,12 +36,18 @@ public class UrlPersistenceSpringJdbcQuerydslImpl implements UrlPersistence {
 
     @Override
     public void saveShortened(String url, String shortened) {
-        jdbcClient
-                .sql("INSERT INTO urls(id, original_url, shortened) VALUES (:id, :original_url, :shortened)")
-                .param("id", tsidFactory.generate().toLong())
-                .param("original_url", url)
-                .param("shortened", shortened)
-                .update();
+        try {
+            SQLTemplates dialect = new PostgreSQLTemplates();
+            QUrlJdbcEntity urlEntity = QUrlJdbcEntity.urlJdbcEntity;
+            SQLInsertClause insertClause = new SQLInsertClause(jdbcTemplate.getDataSource().getConnection(), dialect, urlEntity);
+            insertClause
+                    .set(urlEntity.id, tsidFactory.generate().toLong())
+                    .set(urlEntity.originalUrl, url)
+                    .set(urlEntity.shortened, shortened)
+                    .execute();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

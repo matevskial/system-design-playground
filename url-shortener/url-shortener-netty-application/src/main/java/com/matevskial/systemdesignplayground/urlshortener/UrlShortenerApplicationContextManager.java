@@ -11,7 +11,6 @@ import com.matevskial.systemdesignplayground.urlshortener.persistence.springjdbc
 import com.matevskial.systemdesignplayground.urlshortener.service.UrlShortenerService;
 import io.hypersistence.tsid.TSID;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.simple.JdbcClient;
 
 public class UrlShortenerApplicationContextManager implements ApplicationContextManager {
 
@@ -25,7 +24,6 @@ public class UrlShortenerApplicationContextManager implements ApplicationContext
 
         context.registerBean(new UrlPersistenceSpringJdbcQuerydslImpl(
                         context.getBean(JdbcTemplate.class),
-                        context.getBean(JdbcClient.class),
                         context.getBean(TSID.Factory.class)),
                 UrlPersistence.class);
 
