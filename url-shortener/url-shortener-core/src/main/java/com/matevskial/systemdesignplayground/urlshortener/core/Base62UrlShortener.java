@@ -25,7 +25,6 @@ public class Base62UrlShortener implements UrlShortener {
             result.append(BASE_62_DIGITS.charAt((int) (current % 62)));
             current /= 62;
         } while (current > 0);
-        System.out.println("result: " + result);
         return result.reverse().toString();
     }
 }
