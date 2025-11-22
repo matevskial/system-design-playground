@@ -16,7 +16,6 @@
 * [] - (url-shortener) Implement configuration to set node in a dynamic way in order to prepare the service to be running with multiple instances. 
 One example is calculating a node id based on the ip address of the pod where the application is running
 * [] - (url-shortener) Implement redis caching
-* [] - (url-shortener-netty) Configure the ExecutorService to mimic tomcat's behavior: 200 threads maximum, 25 idle
 
 ## done
 
@@ -30,3 +29,4 @@ One example is calculating a node id based on the ip address of the pod where th
     * see if queue-based should be improved
 * [v] - (url-shortener-netty) make sure exception is handled when mapping netty http request to framework request because request is hanging
   * to reproduce the problem, use POST http://localhost:6063/api/v1/shorten?originalUrl=http://youtube.com where queryParams are part of the path
+* [v] - (url-shortener-netty) Configure the ExecutorService to mimic tomcat's behavior: 200 threads maximum, 25 idle
