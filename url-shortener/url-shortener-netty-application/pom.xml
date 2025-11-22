@@ -37,15 +37,6 @@
             <artifactId>netty-codec-http</artifactId>
             <version>${netty.version}</version>
         </dependency>
-<!--        everything else-->
-        <dependency>
-            <groupId>org.yaml</groupId>
-            <artifactId>snakeyaml</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.hypersistence</groupId>
-            <artifactId>hypersistence-tsid</artifactId>
-        </dependency>
 <!--        DB and orm related-->
         <dependency>
             <groupId>org.postgresql</groupId>
@@ -64,6 +55,28 @@
             <groupId>com.infobip</groupId>
             <artifactId>infobip-spring-data-jdbc-annotation-processor</artifactId>
             <version>9.2.0</version>
+        </dependency>
+<!--        logging -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+        </dependency>
+        <!--        everything else-->
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.hypersistence</groupId>
+            <artifactId>hypersistence-tsid</artifactId>
         </dependency>
     </dependencies>
 

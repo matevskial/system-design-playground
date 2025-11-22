@@ -5,6 +5,7 @@ import com.matevskial.systemdesignplayground.urlshortener.framework.application.
 import com.matevskial.systemdesignplayground.urlshortener.framework.application.config.ApplicationConfig;
 import com.matevskial.systemdesignplayground.urlshortener.framework.application.config.ApplicationConfigReader;
 import com.matevskial.systemdesignplayground.urlshortener.framework.application.config.ApplicationConfigKeys;
+import com.matevskial.systemdesignplayground.urlshortener.framework.logging.logback.LogbackApplicationContextManager;
 import com.matevskial.systemdesignplayground.urlshortener.spring.TransactionWithSpringApplicationContextManager;
 import com.matevskial.systemdesignplayground.urlshortener.framework.web.RequestHandlers;
 import com.matevskial.systemdesignplayground.urlshortener.framework.web.netty.HttpNettyHandler;
@@ -22,10 +23,12 @@ import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpRequestDecoder;
 import io.netty.handler.codec.http.HttpResponseEncoder;
 import io.netty.util.concurrent.Future;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Arrays;
 import java.util.List;
 
+@Slf4j
 public class UrlShortenerNettyApplication {
 
     public static void main(String[] args) {
@@ -48,16 +51,18 @@ public class UrlShortenerNettyApplication {
                 .read();
 
         ApplicationContext applicationContext = new ApplicationContext(applicationConfig);
+        LogbackApplicationContextManager logbackApplicationContextManager = new LogbackApplicationContextManager();
+        logbackApplicationContextManager.manage(applicationContext);
 
         NioEventLoopGroup httpServerParentEventLoopGroup = null;
         NioEventLoopGroup httpServerChildEventLoopGroup = null;
 
         try {
-            System.out.println("Initializing url-shortener netty application...");
+            log.info("Starting url-shortener netty application...");
             if (applicationConfig.getProfiles().isEmpty()) {
-                System.out.println("No profile activated. Using default profile.");
+                log.info("No profile activated. Using default profile.");
             } else {
-                System.out.println("Profiles activated: %s".formatted(applicationConfig.getProfiles()));
+                log.info("Profiles activated: {}", applicationConfig.getProfiles());
             }
 
             TsIdApplicationContextManager tsIdApplicationContextManager = new TsIdApplicationContextManager();
@@ -82,7 +87,6 @@ public class UrlShortenerNettyApplication {
             shortenedToOriginalUrlRedirectionHandler.setupHandlers(requestHandlers);
 
             int httpPort = applicationContext.getConfigProperty("server.port", Integer.class, 8080);
-            System.out.println("Starting url-shortener netty application...");
 
             httpServerParentEventLoopGroup = new NioEventLoopGroup(1);
             httpServerChildEventLoopGroup = new NioEventLoopGroup();
@@ -101,12 +105,12 @@ public class UrlShortenerNettyApplication {
                         }
                     });
             var channelFuture = httpServerBootstrap.bind(httpPort).syncUninterruptibly();
-            System.out.println("Started url-shortener netty application on port %s".formatted(httpPort));
+            log.info("Started url-shortener netty application on port {}", httpPort);
             channelFuture.channel().closeFuture().syncUninterruptibly();
         } catch (ApplicationException e) {
-            System.out.println("Failed initializing application: %s".formatted(e.getMessage()));
+            log.error("Failed initializing application", e);
         } catch (Exception e) {
-            System.out.println("Exception: %s".formatted(e.getMessage()));
+            log.error("Exception", e);
         } finally {
             try {
                 Future<?> parentHttpServerEventLoopGroupShutdown = null;
@@ -126,7 +130,7 @@ public class UrlShortenerNettyApplication {
                     childHttpServerEventLoopGroupShutdown.get();
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error("Exception", e);
             }
         }
     }

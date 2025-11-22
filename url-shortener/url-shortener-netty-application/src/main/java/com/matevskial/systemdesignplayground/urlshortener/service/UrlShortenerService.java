@@ -5,10 +5,12 @@ import com.matevskial.systemdesignplayground.urlshortener.core.UrlShortener;
 import com.matevskial.systemdesignplayground.urlshortener.core.UrlShortenerProperties;
 import com.matevskial.systemdesignplayground.urlshortener.persistence.UrlPersistence;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Optional;
 
 @RequiredArgsConstructor
+@Slf4j
 public class UrlShortenerService {
 
     private final UrlPersistence urlPersistence;
@@ -17,6 +19,7 @@ public class UrlShortenerService {
 
     public String getOrCreateShortenedUrl(String originalUrl) {
         return Transaction.withTransaction(() -> {
+            log.info("Shortening URL {}", originalUrl);
             var shortenedOptional = urlPersistence.findShortened(originalUrl);
             String shortened;
             if (shortenedOptional.isPresent()) {

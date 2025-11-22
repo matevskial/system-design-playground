@@ -6,6 +6,7 @@ import io.netty.channel.*;
 import io.netty.handler.codec.http.*;
 import io.netty.util.concurrent.Promise;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
@@ -13,6 +14,7 @@ import java.util.concurrent.Executors;
 
 @ChannelHandler.Sharable
 @RequiredArgsConstructor
+@Slf4j
 public class HttpNettyHandler extends ChannelInboundHandlerAdapter {
 
     private final ExecutorService executorService = Executors.newFixedThreadPool(10);
@@ -92,7 +94,7 @@ public class HttpNettyHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        System.out.println("Exception during request handling: " + cause.getMessage());
+        log.error("Exception during request handling", cause);
         writeAndFlushInternalServerErrorResponse(ctx, cause).addListener(ChannelFutureListener.CLOSE);
     }
 
