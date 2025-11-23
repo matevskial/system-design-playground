@@ -68,14 +68,11 @@ public class RequestHandlers {
 
         public RequestHandlersQuery path(String path) {
             this.path = path;
-            if (path != null) {
-                int end = path.indexOf('?');
-                if (end == -1) {
-                    end = path.length();
-                }
-                this.path = path.substring(0, end);
-            }
             return new RequestHandlersQuery(this);
+        }
+
+        public Optional<RegisteredRequestHandler> request(Request request) {
+            return path(request.getPath()).method(request.getHttpMethod());
         }
     }
 

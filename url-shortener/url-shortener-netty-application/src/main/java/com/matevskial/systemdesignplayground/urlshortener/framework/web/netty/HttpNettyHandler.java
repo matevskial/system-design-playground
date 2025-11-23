@@ -24,10 +24,10 @@ public class HttpNettyHandler extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         if (msg instanceof FullHttpRequest request) {
             Promise<Response> promise = ctx.executor().newPromise();
+            Request simpleRequest = mapFromNettyRequestToSimpleRequest(request);
             Optional<RegisteredRequestHandler> requestHandlerOptional = requestHandlers
                     .query()
-                    .path(request.uri())
-                    .method(mapFromNettyHttpMethod(request.method()));
+                    .request(simpleRequest);
             if (requestHandlerOptional.isPresent()) {
                 executorService.submit(() -> {
                     try {
@@ -55,6 +55,13 @@ public class HttpNettyHandler extends ChannelInboundHandlerAdapter {
                 throw new RuntimeException("No request handler found");
             }
         }
+    }
+
+    private Request mapFromNettyRequestToSimpleRequest(FullHttpRequest request) {
+        NettyRequest nettyRequest = new NettyRequest();
+        nettyRequest.setPath(request.uri());
+        nettyRequest.setHttpMethod(mapFromNettyHttpMethod(request.method()));
+        return nettyRequest;
     }
 
     private Request mapFromNettyRequest(FullHttpRequest request, RegisteredRequestHandler requestHandler) {

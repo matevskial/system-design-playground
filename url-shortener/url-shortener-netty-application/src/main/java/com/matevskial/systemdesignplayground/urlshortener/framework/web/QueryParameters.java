@@ -11,10 +11,28 @@ public class QueryParameters {
     private Map<String, QueryParameterValue> queryParameters;
 
     // TODO: maybe replace with more performant implementation instead of using split and substring?
+    /**
+     * Even though netty cuts the part that begins with # from the url, I still treat path as if
+     * the part that begins with # was not cut. We do this  just so we don't rely on netty's behavior for it
+     */
     public QueryParameters(String path) {
-        int beginIndexOfQueryParameters = path.indexOf('?');
-        if (beginIndexOfQueryParameters != -1 && beginIndexOfQueryParameters < path.length() - 1) {
-            String queryParametersStr = path.substring(beginIndexOfQueryParameters + 1);
+        int firstSharpIndex = -1;
+        int firstQuestionMarkIndex = -1;
+        for (int i = 0; i < path.length(); i++) {
+            if (path.charAt(i) == '?' && firstQuestionMarkIndex == -1) {
+                firstQuestionMarkIndex = i;
+            }
+            if (path.charAt(i) == '#' && firstSharpIndex == -1) {
+                firstSharpIndex = i;
+            }
+        }
+
+        int endOfQueryParametersSubstring = firstSharpIndex != -1
+                ? firstSharpIndex
+                : path.length();
+
+        if (firstQuestionMarkIndex != -1 && firstQuestionMarkIndex < endOfQueryParametersSubstring - 1) {
+            String queryParametersStr = path.substring(firstQuestionMarkIndex + 1, endOfQueryParametersSubstring);
             String[] queryParametersRaw = queryParametersStr.split("&");
             if (queryParametersRaw.length > 0) {
                 queryParameters = new HashMap<>();

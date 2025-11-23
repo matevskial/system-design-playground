@@ -17,6 +17,7 @@
 One example is calculating a node id based on the ip address of the pod where the application is running
 * [] - (url-shortener) Implement redis caching
 * [] - (url-shortener-netty-application) Implement request body - multipart/form-data; boundary=...
+* [] - (url-shortener-netty-application) Refactor RequestHandlers: query() and register() should be last instead of first in fluent api
 
 ## done
 

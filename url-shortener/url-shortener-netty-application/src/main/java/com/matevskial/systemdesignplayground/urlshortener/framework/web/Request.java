@@ -8,7 +8,6 @@ import lombok.Setter;
 public abstract class Request {
 
     @Getter
-    @Setter
     private String path;
 
     @Getter
@@ -20,6 +19,30 @@ public abstract class Request {
 
     @Getter
     protected PathVariables pathVariables;
+
+    public void setPath(String path) {
+        if (path != null) {
+            int firstSharpIndex = -1;
+            int firstQuestionMarkIndex = -1;
+            for (int i = 0; i < path.length(); i++) {
+                if (path.charAt(i) == '?' && firstQuestionMarkIndex == -1) {
+                    firstQuestionMarkIndex = i;
+                }
+                if (path.charAt(i) == '#' && firstSharpIndex == -1) {
+                    firstSharpIndex = i;
+                }
+            }
+            int substringEndIndex = firstSharpIndex != -1 && firstSharpIndex <= firstQuestionMarkIndex
+                    ? firstSharpIndex
+                    : firstQuestionMarkIndex;
+
+            if (substringEndIndex == -1) {
+                this.path = path;
+            } else {
+                this.path = path.substring(0, substringEndIndex);
+            }
+        }
+    }
 
     public void setQueryParameters(String path) {
         this.queryParameters = new QueryParameters(path);
