@@ -32,28 +32,37 @@ import java.util.List;
 public class UrlShortenerNettyApplication {
 
     public static void main(String[] args) {
-        List<String> profiles = List.of();
-        if (args != null) {
-            for (String arg : args) {
-                if (arg != null && arg.startsWith(ApplicationConfigKeys.PROFILES)) {
-                    String[] argParts = arg.split("=");
-                    if (argParts.length > 1) {
-                        profiles = Arrays.asList(argParts[1].trim().split(","));
+        ApplicationConfig applicationConfig;
+        ApplicationContext applicationContext;
+        try {
+            List<String> profiles = List.of();
+            if (args != null) {
+                for (String arg : args) {
+                    if (arg != null && arg.startsWith(ApplicationConfigKeys.PROFILES)) {
+                        String[] argParts = arg.split("=");
+                        if (argParts.length > 1) {
+                            profiles = Arrays.asList(argParts[1].trim().split(","));
+                        }
                     }
                 }
             }
+
+            applicationConfig = new ApplicationConfigReader()
+                    .profiles(profiles)
+                    .fromProperties()
+                    .fromYaml()
+                    .read();
+
+            applicationContext = new ApplicationContext(applicationConfig);
+            LogbackApplicationContextManager logbackApplicationContextManager = new LogbackApplicationContextManager();
+            logbackApplicationContextManager.manage(applicationContext);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.exit(1);
+            return; // to satisfy compiler that complains that variables above this try-catch might not be initialized
         }
 
-        ApplicationConfig applicationConfig = new ApplicationConfigReader()
-                .profiles(profiles)
-                .fromProperties()
-                .fromYaml()
-                .read();
-
-        ApplicationContext applicationContext = new ApplicationContext(applicationConfig);
-        LogbackApplicationContextManager logbackApplicationContextManager = new LogbackApplicationContextManager();
-        logbackApplicationContextManager.manage(applicationContext);
-
+        int exitCode = 0;
         NioEventLoopGroup httpServerParentEventLoopGroup = null;
         NioEventLoopGroup httpServerChildEventLoopGroup = null;
 
@@ -107,10 +116,13 @@ public class UrlShortenerNettyApplication {
             var channelFuture = httpServerBootstrap.bind(httpPort).syncUninterruptibly();
             log.info("Started url-shortener netty application on port {}", httpPort);
             channelFuture.channel().closeFuture().syncUninterruptibly();
-        } catch (ApplicationException e) {
-            log.error("Failed initializing application", e);
         } catch (Exception e) {
-            log.error("Exception", e);
+            exitCode = 1;
+            if (e instanceof ApplicationException) {
+                log.error("Failed initializing application", e);
+            } else {
+                log.error("Exception", e);
+            }
         } finally {
             try {
                 Future<?> parentHttpServerEventLoopGroupShutdown = null;
@@ -130,8 +142,10 @@ public class UrlShortenerNettyApplication {
                     childHttpServerEventLoopGroupShutdown.get();
                 }
             } catch (Exception e) {
+                exitCode = 1;
                 log.error("Exception", e);
             }
         }
+        System.exit(exitCode);
     }
 }
