@@ -14,10 +14,9 @@ public class ShortenedToOriginalUrlRedirectionHandler implements RequestHandler 
     @Override
     public void setupHandlers(RequestHandlers requestHandlers) {
         requestHandlers
-                .register()
                 .path("/{shortened}")
                 .method(HttpMethod.GET)
-                .handler(this::redirectToOriginalUrl);
+                .register(this::redirectToOriginalUrl);
     }
 
     public void redirectToOriginalUrl(Request request, Response response) {

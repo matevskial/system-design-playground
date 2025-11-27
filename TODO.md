@@ -17,7 +17,7 @@
 One example is calculating a node id based on the ip address of the pod where the application is running
 * [] - (url-shortener) Implement redis caching
 * [] - (url-shortener-netty-application) Implement request body - multipart/form-data; boundary=...
-* [] - (url-shortener-netty-application) Refactor RequestHandlers: query() and register() should be last instead of first in fluent api
+* [] - Think about how to pass an input stream to read data rather than reading whole body first
 
 ## done
 
@@ -32,3 +32,4 @@ One example is calculating a node id based on the ip address of the pod where th
 * [v] - (url-shortener-netty) make sure exception is handled when mapping netty http request to framework request because request is hanging
   * to reproduce the problem, use POST http://localhost:6063/api/v1/shorten?originalUrl=http://youtube.com where queryParams are part of the path
 * [v] - (url-shortener-netty) Configure the ExecutorService to mimic tomcat's behavior: 200 threads maximum, 25 idle
+* [v] - (url-shortener-netty-application) Refactor RequestHandlers: query() and register() should be last instead of first in fluent api

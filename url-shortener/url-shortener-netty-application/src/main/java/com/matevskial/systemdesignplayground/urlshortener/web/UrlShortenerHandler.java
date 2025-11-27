@@ -12,10 +12,9 @@ public class UrlShortenerHandler implements RequestHandler {
     @Override
     public void setupHandlers(RequestHandlers requestHandlers) {
         requestHandlers
-                .register()
                 .path("/api/v1/shorten")
                 .method(HttpMethod.POST)
-                .handler(this::shorten);
+                .register(this::shorten);
     }
 
     public void shorten(Request request, Response response) {

@@ -25,9 +25,7 @@ public class HttpNettyHandler extends ChannelInboundHandlerAdapter {
         if (msg instanceof FullHttpRequest request) {
             Promise<Response> promise = ctx.executor().newPromise();
             Request simpleRequest = mapFromNettyRequestToSimpleRequest(request);
-            Optional<RegisteredRequestHandler> requestHandlerOptional = requestHandlers
-                    .query()
-                    .request(simpleRequest);
+            Optional<RegisteredRequestHandler> requestHandlerOptional = requestHandlers.query(simpleRequest);
             if (requestHandlerOptional.isPresent()) {
                 executorService.submit(() -> {
                     try {

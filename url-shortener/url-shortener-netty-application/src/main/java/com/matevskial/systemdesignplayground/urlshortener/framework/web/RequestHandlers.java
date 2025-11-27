@@ -1,6 +1,6 @@
 package com.matevskial.systemdesignplayground.urlshortener.framework.web;
 
-import lombok.RequiredArgsConstructor;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,83 +11,52 @@ public class RequestHandlers {
 
     private final List<RegisteredRequestHandler> requestHandlers = new ArrayList<>();
 
-    public RequestHandlersRegisterBegin register() {
-        return new RequestHandlersRegisterBegin(this);
+    public RequestSpecBuilder path(String path) {
+        return new RequestSpecBuilder(this).path(path);
     }
 
-    public RequestHandlersQueryBegin query() {
-        return new RequestHandlersQueryBegin(this);
+    public RequestSpecBuilder method(HttpMethod httpMethod) {
+        return new RequestSpecBuilder(this).method(httpMethod);
     }
 
-    @RequiredArgsConstructor
-    public static final class RequestHandlersRegisterBegin {
+    public Optional<RegisteredRequestHandler> query(Request simpleRequest) {
+        return new RequestSpecBuilder(this)
+                .path(simpleRequest.getPath())
+                .method(simpleRequest.getHttpMethod())
+                .query();
+    }
+
+    @Getter
+    public static class RequestSpecBuilder {
         private final RequestHandlers requestHandlers;
+
         private String path;
-
-        public RequestHandlersRegister path(String path) {
-            if (path == null) {
-                throw new IllegalArgumentException("path cannot be null");
-            }
-            this.path = path;
-            if (!path.startsWith("/")) {
-                this.path = "/" + this.path;
-            }
-            return new RequestHandlersRegister(this);
-        }
-    }
-
-    @RequiredArgsConstructor
-    public static final class RequestHandlersRegister {
-        private final RequestHandlersRegisterBegin requestHandlersRegisterBegin;
         private HttpMethod httpMethod;
-        private RequestHandlerFunction requestHandlerFunction;
 
-        public RequestHandlersRegister method(HttpMethod httpMethod) {
+        public RequestSpecBuilder(RequestHandlers requestHandlers) {
+            this.requestHandlers = requestHandlers;
+        }
+
+        public RequestSpecBuilder path(String path) {
+            this.path = path;
+            return this;
+        }
+
+        public RequestSpecBuilder method(HttpMethod httpMethod) {
             this.httpMethod = httpMethod;
             return this;
         }
 
-        public void handler(RequestHandlerFunction requestHandlerFunction) {
-            this.requestHandlerFunction = requestHandlerFunction;
-            register();
-        }
-
-        public void register() {
-            requestHandlersRegisterBegin.requestHandlers.requestHandlers.add(new RegisteredRequestHandler(
-                    requestHandlersRegisterBegin.path,
-                    httpMethod,
+        public void register(RequestHandlerFunction requestHandlerFunction) {
+            requestHandlers.requestHandlers.add(new RegisteredRequestHandler(
+                    this.path,
+                    this.httpMethod,
                     requestHandlerFunction
             ));
         }
-    }
-
-    @RequiredArgsConstructor
-    public static final class RequestHandlersQueryBegin {
-        private final RequestHandlers requestHandlers;
-        private String path;
-
-        public RequestHandlersQuery path(String path) {
-            this.path = path;
-            return new RequestHandlersQuery(this);
-        }
-
-        public Optional<RegisteredRequestHandler> request(Request request) {
-            return path(request.getPath()).method(request.getHttpMethod());
-        }
-    }
-
-    @RequiredArgsConstructor
-    public static final class RequestHandlersQuery {
-        private final RequestHandlersQueryBegin requestHandlersQueryBegin;
-        private HttpMethod httpMethod;
-
-        public Optional<RegisteredRequestHandler> method(HttpMethod httpMethod) {
-            this.httpMethod = httpMethod;
-            return query();
-        }
 
         public Optional<RegisteredRequestHandler> query() {
-            for (RegisteredRequestHandler registeredHandler : requestHandlersQueryBegin.requestHandlers.requestHandlers) {
+            for (RegisteredRequestHandler registeredHandler : requestHandlers.requestHandlers) {
                 if (pathMatches(registeredHandler)) {
                     if (Objects.equals(registeredHandler.httpMethod(), httpMethod)) {
                         return Optional.of(registeredHandler);
@@ -98,7 +67,7 @@ public class RequestHandlers {
         }
 
         private boolean pathMatches(RegisteredRequestHandler registeredHandler) {
-            String[] pathSegments = this.requestHandlersQueryBegin.path.split("/");
+            String[] pathSegments = this.path.split("/");
             String[] registeredPathSegments = registeredHandler.path().split("/");
             if (pathSegments.length != registeredPathSegments.length) {
                 return false;
