@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
+import java.util.Objects;
+
 @RequiredArgsConstructor
 public abstract class Request {
 
@@ -19,6 +21,12 @@ public abstract class Request {
 
     @Getter
     protected PathVariables pathVariables;
+
+    @Getter
+    protected Headers headers;
+
+    @Getter
+    protected Body body;
 
     public void setPath(String path) {
         if (path != null) {
@@ -54,5 +62,9 @@ public abstract class Request {
 
     public String getPathVariable(String path) {
         return this.pathVariables.getPathVariable(path);
+    }
+
+    public boolean isFormData() {
+        return Objects.requireNonNullElse(headers.getValue(Headers.CONTENT_TYPE), "").startsWith("multipart/form-data");
     }
 }

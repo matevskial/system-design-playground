@@ -1,7 +1,6 @@
 package com.matevskial.systemdesignplayground.urlshortener.framework.web.netty;
 
 import com.matevskial.systemdesignplayground.urlshortener.framework.web.*;
-import com.matevskial.systemdesignplayground.urlshortener.framework.web.HttpMethod;
 import io.netty.channel.*;
 import io.netty.handler.codec.http.*;
 import io.netty.util.concurrent.Promise;
@@ -39,13 +38,13 @@ public class HttpNettyHandler extends ChannelInboundHandlerAdapter {
                     }
                 });
 
-                Request simpleRequest = mapFromNettyRequestToSimpleRequest(request);
-                Optional<RegisteredRequestHandler> requestHandlerOptional = requestHandlers.query(simpleRequest);
+                Request basicRequest = NettyRequest.basicRequest(request);
+                Optional<RegisteredRequestHandler> requestHandlerOptional = requestHandlers.query(basicRequest);
                 if (requestHandlerOptional.isPresent()) {
+                    Request frameworkRequest = NettyRequest.fullRequest(request, requestHandlerOptional.get());
                     final Promise<Response> finalPromise = promise;
                     executorService.submit(() -> {
                         try {
-                            Request frameworkRequest = mapFromNettyRequest(request, requestHandlerOptional.get());
                             Response response = new NettyResponse();
                             requestHandlerOptional.get().requestHandlerFunction().apply(frameworkRequest, response);
                             finalPromise.setSuccess(response);
@@ -68,24 +67,6 @@ public class HttpNettyHandler extends ChannelInboundHandlerAdapter {
         }
     }
 
-    private Request mapFromNettyRequestToSimpleRequest(FullHttpRequest request) {
-        NettyRequest nettyRequest = new NettyRequest();
-        nettyRequest.setPath(request.uri());
-        nettyRequest.setHttpMethod(mapFromNettyHttpMethod(request.method()));
-        return nettyRequest;
-    }
-
-    private Request mapFromNettyRequest(FullHttpRequest request, RegisteredRequestHandler requestHandler) {
-        NettyRequest nettyRequest = new NettyRequest();
-        nettyRequest.setPath(request.uri());
-        nettyRequest.setHttpMethod(mapFromNettyHttpMethod(request.method()));
-        nettyRequest.setQueryParameters(request.uri());
-        nettyRequest.setPathVariables(request.uri(), requestHandler.path());
-        nettyRequest.setHeaders(request);
-        nettyRequest.setBody(request);
-        return nettyRequest;
-    }
-
     private DefaultFullHttpResponse mapFromFrameworkResponse(Response frameworkResponse) {
         DefaultFullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.valueOf(frameworkResponse.getStatus()));
         if (frameworkResponse instanceof NettyResponse frameworkNettyResponse) {
@@ -93,15 +74,6 @@ public class HttpNettyHandler extends ChannelInboundHandlerAdapter {
             frameworkNettyResponse.setHeaders(response);
         }
         return response;
-    }
-
-    private HttpMethod mapFromNettyHttpMethod(io.netty.handler.codec.http.HttpMethod method) {
-        for  (HttpMethod httpMethod : HttpMethod.values()) {
-            if (httpMethod.name().equals(method.name())) {
-                return httpMethod;
-            }
-        }
-        return null;
     }
 
     @Override

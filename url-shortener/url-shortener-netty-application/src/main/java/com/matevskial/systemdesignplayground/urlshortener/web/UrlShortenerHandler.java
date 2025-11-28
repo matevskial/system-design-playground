@@ -19,9 +19,13 @@ public class UrlShortenerHandler implements RequestHandler {
 
     public void shorten(Request request, Response response) {
         try {
-            QueryParameterValue originalUrl = request.getQueryParameters().getSingleValue("originalUrl");
-            if (originalUrl == QueryParameterValue.STRING_VALUE) {
-                String shortenedUrl = urlShortenerService.getOrCreateShortenedUrl(originalUrl.getStringValue());
+            String originalUrl = null;
+            if (request.isFormData()) {
+                FormDataBody body = (FormDataBody) request.getBody();
+                originalUrl = body.getFormItem("originalUrl");
+            }
+            if (originalUrl != null) {
+                String shortenedUrl = urlShortenerService.getOrCreateShortenedUrl(originalUrl);
                 response.setText(shortenedUrl);
                 response.setLocationHeaderValue(shortenedUrl);
                 response.setStatus(201);
