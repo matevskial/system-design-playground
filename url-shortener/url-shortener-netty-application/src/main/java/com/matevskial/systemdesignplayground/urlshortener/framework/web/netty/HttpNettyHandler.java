@@ -23,20 +23,9 @@ public class HttpNettyHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         if (msg instanceof FullHttpRequest request) {
-            Promise<Response> promise = ctx.executor().newPromise();
-            Request simpleRequest = mapFromNettyRequestToSimpleRequest(request);
-            Optional<RegisteredRequestHandler> requestHandlerOptional = requestHandlers.query(simpleRequest);
-            if (requestHandlerOptional.isPresent()) {
-                executorService.submit(() -> {
-                    try {
-                        Request frameworkRequest = mapFromNettyRequest(request, requestHandlerOptional.get());
-                        Response response = new NettyResponse();
-                        requestHandlerOptional.get().requestHandlerFunction().apply(frameworkRequest, response);
-                        promise.setSuccess(response);
-                    } catch (Exception e) {
-                        promise.setFailure(e);
-                    }
-                });
+            Promise<Response> promise = null;
+            try {
+                promise = ctx.executor().newPromise();
                 promise.addListener(future -> {
                     if (future.isSuccess()) {
                         try {
@@ -49,9 +38,33 @@ public class HttpNettyHandler extends ChannelInboundHandlerAdapter {
                         exceptionCaught(ctx, future.cause());
                     }
                 });
-            } else {
-                throw new RuntimeException("No request handler found");
+
+                Request simpleRequest = mapFromNettyRequestToSimpleRequest(request);
+                Optional<RegisteredRequestHandler> requestHandlerOptional = requestHandlers.query(simpleRequest);
+                if (requestHandlerOptional.isPresent()) {
+                    final Promise<Response> finalPromise = promise;
+                    executorService.submit(() -> {
+                        try {
+                            Request frameworkRequest = mapFromNettyRequest(request, requestHandlerOptional.get());
+                            Response response = new NettyResponse();
+                            requestHandlerOptional.get().requestHandlerFunction().apply(frameworkRequest, response);
+                            finalPromise.setSuccess(response);
+                        } catch (Exception e) {
+                            finalPromise.setFailure(e);
+                        }
+                    });
+                } else {
+                    throw new RuntimeException("No request handler found");
+                }
+            } catch (Exception e) {
+                if (promise != null) {
+                    promise.setFailure(e);
+                } else {
+                    throw e;
+                }
             }
+        } else {
+            throw new RuntimeException("Did not receive full http request");
         }
     }
 
