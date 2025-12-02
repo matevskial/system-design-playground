@@ -16,7 +16,16 @@
 * [] - (url-shortener) Implement configuration to set node in a dynamic way in order to prepare the service to be running with multiple instances. 
 One example is calculating a node id based on the ip address of the pod where the application is running
 * [] - (url-shortener) Implement redis caching
-* [] - Think about how to pass an input stream to read data rather than reading whole body first
+* [] - (url-shortener-netty-application) Think about how to pass an input stream to read data rather than reading whole body first
+  * or we can introduce some new class that will have the ability to trigger complete reading of the data
+* [] - (url-shortener-netty-application) Implement simple user management with register, login, this should cover json handling and jwt libraries
+  * should secure the shorten url endpoint
+  * technical notes
+    * can we avoid reflection while parsing to a pojo?
+    * what if we parse a json to a pojo manually
+    * what if I write my own json serializer/deserializer
+* [] - (url-shortener-netty-application) Implement csrf?
+* [] - (url-shortener-netty-application) Try compiling to native using graalvm
 
 ## done
 
