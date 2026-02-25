@@ -1,0 +1,16 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="FileDownloaderApplication" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="com.matevskial.systemdesignplayground.filedownloader.FileDownloaderApplication" />
+    <module name="file-downloader" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/file-downloader/working-directory" />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="com.matevskial.systemdesignplayground.filedownloader.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

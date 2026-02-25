@@ -45,6 +45,7 @@
         <module>my-rest-controllers</module>
         <module>url-shortener</module>
         <module>netty-playground</module>
+        <module>file-downloader</module>
     </modules>
 
     <dependencies>
