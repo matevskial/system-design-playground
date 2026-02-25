@@ -1,5 +1,6 @@
 package com.matevskial.systemdesignplayground.urlshortener;
 
+import com.matevskial.systemdesignplayground.urlshortener.dto.UserDto;
 import com.matevskial.systemdesignplayground.urlshortener.framework.application.ApplicationContext;
 import com.matevskial.systemdesignplayground.urlshortener.framework.application.ApplicationException;
 import com.matevskial.systemdesignplayground.urlshortener.framework.application.config.ApplicationConfig;
@@ -14,6 +15,8 @@ import com.matevskial.systemdesignplayground.urlshortener.spring.jdbc.SpringJdbc
 import com.matevskial.systemdesignplayground.urlshortener.tsid.TsIdApplicationContextManager;
 import com.matevskial.systemdesignplayground.urlshortener.web.ShortenedToOriginalUrlRedirectionHandler;
 import com.matevskial.systemdesignplayground.urlshortener.web.UrlShortenerHandler;
+import io.micronaut.json.JsonMapper;
+import io.micronaut.serde.SerdeJsonMapperSupplier;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
@@ -32,6 +35,21 @@ import java.util.List;
 public class UrlShortenerNettyApplication {
 
     public static void main(String[] args) {
+        JsonMapper jsonMapper = new SerdeJsonMapperSupplier().get();
+
+        try {
+            UserDto dto = jsonMapper.readValue("""
+                {
+                   "email": "123",
+                   "qty": 123
+                }
+                """, UserDto.class);
+
+            System.out.println("done");
+        } catch (Exception e) {
+            System.exit(1);
+        }
+
         ApplicationConfig applicationConfig;
         ApplicationContext applicationContext;
         try {
