@@ -7,11 +7,11 @@ import com.matevskial.systemdesignplayground.urlshortener.framework.application.
 import com.matevskial.systemdesignplayground.urlshortener.framework.application.config.ApplicationConfigReader;
 import com.matevskial.systemdesignplayground.urlshortener.framework.application.config.ApplicationConfigKeys;
 import com.matevskial.systemdesignplayground.urlshortener.framework.logging.logback.LogbackApplicationContextManager;
-import com.matevskial.systemdesignplayground.urlshortener.spring.TransactionWithSpringApplicationContextManager;
+import com.matevskial.systemdesignplayground.urlshortener.transaction.spring.TransactionWithSpringApplicationContextManager;
 import com.matevskial.systemdesignplayground.urlshortener.framework.web.RequestHandlers;
 import com.matevskial.systemdesignplayground.urlshortener.framework.web.netty.HttpNettyHandler;
 import com.matevskial.systemdesignplayground.urlshortener.service.UrlShortenerService;
-import com.matevskial.systemdesignplayground.urlshortener.spring.jdbc.SpringJdbcApplicationContextManager;
+import com.matevskial.systemdesignplayground.urlshortener.jdbc.spring.SpringJdbcApplicationContextManager;
 import com.matevskial.systemdesignplayground.urlshortener.tsid.TsIdApplicationContextManager;
 import com.matevskial.systemdesignplayground.urlshortener.web.ShortenedToOriginalUrlRedirectionHandler;
 import com.matevskial.systemdesignplayground.urlshortener.web.UrlShortenerHandler;

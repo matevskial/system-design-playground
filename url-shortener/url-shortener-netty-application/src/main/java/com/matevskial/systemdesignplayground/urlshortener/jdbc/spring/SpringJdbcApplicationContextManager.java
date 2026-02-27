@@ -1,4 +1,4 @@
-package com.matevskial.systemdesignplayground.urlshortener.spring.jdbc;
+package com.matevskial.systemdesignplayground.urlshortener.jdbc.spring;
 
 import com.matevskial.systemdesignplayground.urlshortener.framework.application.ApplicationContext;
 import com.matevskial.systemdesignplayground.urlshortener.framework.application.ApplicationContextManager;
