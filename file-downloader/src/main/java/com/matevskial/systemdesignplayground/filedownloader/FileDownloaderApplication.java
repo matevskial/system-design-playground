@@ -132,7 +132,7 @@ public class FileDownloaderApplication {
     private static class UrlEntry {
         String url;
 
-        public UrlEntry(String url, String year) {
+        public UrlEntry(String url) {
             if (url == null) {
                 throw new IllegalArgumentException("url cannot be null");
             }
