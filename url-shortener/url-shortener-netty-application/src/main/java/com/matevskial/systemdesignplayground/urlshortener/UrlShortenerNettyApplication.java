@@ -35,21 +35,6 @@ import java.util.List;
 public class UrlShortenerNettyApplication {
 
     public static void main(String[] args) {
-        JsonMapper jsonMapper = new SerdeJsonMapperSupplier().get();
-
-        try {
-            UserDto dto = jsonMapper.readValue("""
-                {
-                   "email": "123",
-                   "qty": 123
-                }
-                """, UserDto.class);
-
-            System.out.println("done");
-        } catch (Exception e) {
-            System.exit(1);
-        }
-
         ApplicationConfig applicationConfig;
         ApplicationContext applicationContext;
         try {
@@ -78,6 +63,21 @@ public class UrlShortenerNettyApplication {
             e.printStackTrace();
             System.exit(1);
             return; // to satisfy compiler that complains that variables above this try-catch might not be initialized
+        }
+
+        JsonMapper jsonMapper = new SerdeJsonMapperSupplier().get();
+
+        try {
+            UserDto dto = jsonMapper.readValue("""
+                {
+                   "email": "123",
+                   "qty": 123
+                }
+                """, UserDto.class);
+
+            System.out.println("done");
+        } catch (Exception e) {
+            System.exit(1);
         }
 
         int exitCode = 0;

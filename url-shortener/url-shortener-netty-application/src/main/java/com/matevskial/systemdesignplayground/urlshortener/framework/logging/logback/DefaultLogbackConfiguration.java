@@ -45,6 +45,7 @@ class DefaultLogbackConfiguration {
         putProperty(config, "CONSOLE_LOG_THRESHOLD", "${CONSOLE_LOG_THRESHOLD:-TRACE}");
         putProperty(config, "CONSOLE_LOG_STRUCTURED_FORMAT", "${CONSOLE_LOG_STRUCTURED_FORMAT:-}");
         config.logger("io.netty", Level.ERROR);
+        config.logger("io.micronaut", Level.OFF);
     }
 
     private String getConsoleCharset() {
