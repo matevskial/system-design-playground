@@ -22,6 +22,7 @@ One example is calculating a node id based on the ip address of the pod where th
   * should secure the shorten url endpoint
   * technical notes
     * can we avoid reflection while parsing to a pojo?
+      * for now, we will use micronaut serialization, this brings micronaut-core but we won't use anything from micronaut other than the serialization part
     * what if we parse a json to a pojo manually
     * what if I write my own json serializer/deserializer
 * [] - (url-shortener-netty-application) Implement csrf?
