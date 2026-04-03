@@ -21,11 +21,23 @@ public class SpringTransactionContext implements TransactionContext {
         TransactionStatus status = transactionManager.getTransaction(def);
         try {
             R result = function.call();
-            transactionManager.commit(status);
+            try {
+                transactionManager.commit(status);
+            } catch (Exception e) {
+                throw new CommitException(e);
+            }
             return result;
+        } catch (CommitException e) {
+            throw e;
         } catch (Exception e) {
             transactionManager.rollback(status);
             throw e;
+        }
+    }
+
+    private static class CommitException extends RuntimeException {
+        public CommitException(Throwable e) {
+            super(e);
         }
     }
 }
