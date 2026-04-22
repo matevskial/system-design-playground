@@ -1,0 +1,22 @@
+name: system-design-playground-kafka-single-node
+
+services:
+  broker-controller:
+    image: apache/kafka:4.2.0
+    container_name: "kafka-single-node-broker-controller"
+    ports:
+      - "9092:9092"
+      - "9095:9095"
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller # makes it work in Kraft combined mode, both roles work in one container
+      KAFKA_LISTENERS: PLAINTEXT://:9092,PLAINTEXT_1://:9095,CONTROLLER://:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_1://localhost:9095 # this is important, otherwise clients outside this container won't be able to connect to kafka
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT, PLAINTEXT_1:PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka-single-node-broker-controller:9093
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_NUM_PARTITIONS: 3

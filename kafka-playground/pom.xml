@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.matevskial</groupId>
+        <artifactId>system-design-playground</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+
+    <packaging>pom</packaging>
+
+    <groupId>com.matevskial.system-design-playground</groupId>
+    <artifactId>kafka-playground</artifactId>
+
+    <name>kafka-playground</name>
+    <description>Module containing submodules that make use of Kafka for learning purposes</description>
+
+    <properties>
+        <kafka-clients.version>4.2.0</kafka-clients.version>
+    </properties>
+
+    <modules>
+        <module>kafka-producer-consumer-application</module>
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.apache.kafka</groupId>
+                <artifactId>kafka-clients</artifactId>
+                <version>${kafka-clients.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+</project>

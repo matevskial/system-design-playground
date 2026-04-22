@@ -1,0 +1,17 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="KafkaProducerConsumerApplicationLocal" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <option name="ACTIVE_PROFILES" value="local" />
+    <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UnknownPolicyInFreeMode" />
+    <module name="kafka-producer-consumer-application" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="com.matevskial.systemdesignplayground.kafkaproducerconsumer.KafkaProducerConsumerApplication" />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="com.matevskial.systemdesignplayground.kafkaproducerconsumer.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <method v="2">
+      <option name="MakeProject" enabled="true" />
+    </method>
+  </configuration>
+</component>
