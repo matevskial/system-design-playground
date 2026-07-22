@@ -1,7 +1,11 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="[install] webrtc-applicationfrontend-vue " type="js.build_tools.npm">
+  <configuration default="false" name="[dev] webrtc-applicationfrontend-vue" type="js.build_tools.npm">
     <package-json value="$PROJECT_DIR$/webrtc-playground/webrtc-application-frontend-vue/application/package.json" />
-    <command value="install" />
+    <command value="run" />
+    <scripts>
+      <script value="dev" />
+    </scripts>
+    <arguments value="-- --host" />
     <node-interpreter value="project" />
     <envs />
     <method v="2" />
