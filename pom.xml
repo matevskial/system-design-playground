@@ -47,6 +47,7 @@
         <module>netty-playground</module>
         <module>file-downloader</module>
         <module>kafka-playground</module>
+        <module>webrtc-playground</module>
     </modules>
 
     <dependencies>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.matevskial</groupId>
+        <artifactId>system-design-playground</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+
+    <packaging>pom</packaging>
+
+    <groupId>com.matevskial.system-design-playground</groupId>
+    <artifactId>webrtc-playground</artifactId>
+
+    <name>webrtc-playground</name>
+    <description>Module containing submodules for webrtc-related applications and libraries</description>
+
+    <modules>
+        <module>webrtc-application-reactive</module>
+        <module>webrtc-application-frontend-vue</module>
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+
+        </dependencies>
+    </dependencyManagement>
+</project>
